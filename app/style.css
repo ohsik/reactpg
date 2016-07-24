@@ -4,8 +4,9 @@
 }
 html, body{
   margin: 0;
+  background: #000;
 }
-div{
+body > div{
   width: 100vw;
   height: 100vh;
   padding: 20px;
