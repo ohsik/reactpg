@@ -27,8 +27,6 @@ input.search{
 }
 .gmap{
   margin: 10px 0;
-}
-.gmap iframe{
   border: 1px solid #fa5454;
   width: 100%;
   min-height: 450px;
