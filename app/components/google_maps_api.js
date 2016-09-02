@@ -1,5 +1,4 @@
 //https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete
-
 window.initMap = function() {
 
   // Create a map object and specify the DOM element for display.
@@ -54,14 +53,15 @@ window.initMap = function() {
       ].join(' ');
     }
 
-    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    infowindow.setContent('<div class="infowindow"><strong>' + place.name + '</strong><br>' + address + '<p><button onclick="save_it()">Save it as your favorite restaurant</button></p></div>');
     infowindow.open(map, marker);
 
-    // test
+    // test | add a save button
     var user_place = place;
-    console.log(user_place);
-  });
+    window.save_it = function(){
+      console.log(user_place);
+    }
 
-
+  }); //autocomplete
 
 } //initMap

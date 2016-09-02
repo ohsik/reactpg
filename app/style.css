@@ -31,3 +31,12 @@ input.search{
   width: 100%;
   min-height: 450px;
 }
+.infowindow{
+  padding: 20px;
+}
+.infowindow button{
+  border: none;
+  background: #fa5454;
+  color: #fff;
+  padding: 10px;
+}
