@@ -1,10 +1,17 @@
 //https://www.youtube.com/watch?v=IR6smI_YJDE
+// http://benignware.github.io/jquery-placepicker/
+// https://github.com/ubilabs/geocomplete
 import React from 'react';
+import $ from 'jquery';
 
 export default class SearchBar extends React.Component {
   render() {
     return (
-      <input type="text" className="search" placeholder="Enter the name of your favorite restaurant" />
+      <div>
+        <input id="pac-input" placeholder="Enter your address" type="text" className="search"></input>
+      </div>
     );
   }
 }
+
+$('.search').hide();

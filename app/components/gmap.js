@@ -6,7 +6,6 @@ export default class GMap extends React.Component {
   render() {
     return (
       <div className="gmap" id="map">
-
       </div>
     );
   }
