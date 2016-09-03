@@ -34,9 +34,16 @@ input.search{
 .infowindow{
   padding: 10px;
 }
-.infowindow button{
+.infowindow button,
+.get-email input[type="button"]{
   border: none;
   background: #fa5454;
   color: #fff;
   padding: 10px;
+}
+.get-email input{
+  width:100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  font-size: 16px;
 }

@@ -59,8 +59,37 @@ window.initMap = function() {
     // test | add a save button
     var user_place = place;
     window.save_it = function(){
+      enterEmail();
       console.log(user_place);
     }
+
+    // Append email form to save data with email address
+    // TODO: save it on DB firebase
+    window.enterEmail = function(){
+      var getEmail = document.createElement('div');
+      getEmail.id = 'get_email';
+      getEmail.className = 'get-email';
+
+      // Create the inner div before appending to the body
+      var input = document.createElement("input");
+      input.type = "email";
+      input.name = "user_email";
+      input.id = "user_email";
+      input.placeholder = "Enter your email address";
+
+      var submit = document.createElement("input");
+      submit.type = "button";
+      submit.id = "email_submit";
+      submit.value = "Save";
+
+      // The variable getEmail is still good... Just append to it.
+      getEmail.appendChild(input);
+      getEmail.appendChild(submit);
+
+      // Then append the whole thing onto the body
+      document.getElementById('content_wrap').appendChild(getEmail);
+    }
+
 
   }); //autocomplete
 
