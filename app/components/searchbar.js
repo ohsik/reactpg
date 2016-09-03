@@ -2,7 +2,6 @@
 // http://benignware.github.io/jquery-placepicker/
 // https://github.com/ubilabs/geocomplete
 import React from 'react';
-import $ from 'jquery';
 
 export default class SearchBar extends React.Component {
   render() {
@@ -13,5 +12,3 @@ export default class SearchBar extends React.Component {
     );
   }
 }
-
-$('.search').hide();

@@ -2,7 +2,6 @@ import React from 'react';
 import SearchBar from './searchbar';
 import GMap from './gmap';
 
-
 export default class App extends React.Component {
   render() {
     return (

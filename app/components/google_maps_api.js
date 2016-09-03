@@ -53,7 +53,7 @@ window.initMap = function() {
       ].join(' ');
     }
 
-    infowindow.setContent('<div class="infowindow"><strong>' + place.name + '</strong><br>' + address + '<p><button onclick="save_it()">Save it as your favorite restaurant</button></p></div>');
+    infowindow.setContent('<div class="infowindow"><h2>' + place.name + '</h2><p>' + address + '</p><p><button onclick="save_it()">Save it as your favorite restaurant</button></p></div>');
     infowindow.open(map, marker);
 
     // test | add a save button
