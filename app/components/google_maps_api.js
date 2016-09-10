@@ -18,6 +18,39 @@ window.initMap = function() {
     anchorPoint: new google.maps.Point(0, -29)
   });
 
+
+  // TODO: read id from Firebase DB
+  // ------------------------------------------------------------------------------
+  var latlngbounds = new google.maps.LatLngBounds();
+
+  var rootRef = firebase.database().ref('favs');
+
+    // Retrieve new posts as they are added to our database
+  rootRef.on("child_added", function(snapshot, prevChildKey) {
+    var favPlace = snapshot.val();
+
+    // Assign Geolocation to Google Maps markers
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(favPlace.fav_place.lat, favPlace.fav_place.lng),
+      map: map
+    });
+
+    // Add infowindow to markers
+    google.maps.event.addListener(marker, 'click', (function(marker) {
+      return function() {
+        infowindow.setContent('<div class="infowindow"><h2>' + favPlace.user_email + '</h2><h3>' + favPlace.fav_place.name + '</h3><p>' + favPlace.fav_place.address + '<p>' + favPlace.fav_place.phone + '</p> <a href="' + favPlace.fav_place.website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.fav_place.url + '" target="_blank" class="btn">See it on Google Map</a></p></div>');
+        infowindow.open(map, marker);
+      }
+    })(marker));
+
+    latlngbounds.extend(marker.getPosition());
+    // console.log(latlngbounds);
+    map.fitBounds(latlngbounds);
+
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+
   autocomplete.addListener('place_changed', function() {
     infowindow.close();
     marker.setVisible(false);
@@ -53,44 +86,40 @@ window.initMap = function() {
       ].join(' ');
     }
 
-    infowindow.setContent('<div class="infowindow"><h2>' + place.name + '</h2><p>' + address + '</p><p><button onclick="save_it()">Save it as your favorite restaurant</button></p></div>');
+    infowindow.setContent('<div class="infowindow"><h2>' + place.name + '</h2><p>' + address + '</p><p><button onClick="save_it()">Save it as your favorite restaurant</button></p></div>');
     infowindow.open(map, marker);
 
     // test | add a save button
-    var user_place = place;
+    var userPlace = place;
     window.save_it = function(){
-      enterEmail();
-      console.log(user_place);
+      sayHello(userPlace);
     }
-
-    // Append email form to save data with email address
-    // TODO: save it on DB firebase
-    window.enterEmail = function(){
-      var getEmail = document.createElement('div');
-      getEmail.id = 'get_email';
-      getEmail.className = 'get-email';
-
-      // Create the inner div before appending to the body
-      var input = document.createElement("input");
-      input.type = "email";
-      input.name = "user_email";
-      input.id = "user_email";
-      input.placeholder = "Enter your email address";
-
-      var submit = document.createElement("input");
-      submit.type = "button";
-      submit.id = "email_submit";
-      submit.value = "Save";
-
-      // The variable getEmail is still good... Just append to it.
-      getEmail.appendChild(input);
-      getEmail.appendChild(submit);
-
-      // Then append the whole thing onto the body
-      document.getElementById('content_wrap').appendChild(getEmail);
-    }
-
 
   }); //autocomplete
 
 } //initMap
+
+function sayHello (userPlace){
+  var rootRef = firebase.database().ref('favs');
+
+  var userData = {
+    user_email: 'o@fabfitfun.com',
+    google_place_id: userPlace.id,
+    friends: [
+    ],
+    fav_place: {
+      name: userPlace.name || null,
+      address: userPlace.formatted_address || null,
+      phone: userPlace.formatted_phone_number || null,
+      website: userPlace.website || null,
+      url: userPlace.url || null,
+      lat: userPlace.geometry.location.lat(),
+      lng: userPlace.geometry.location.lng()
+    }
+  }
+
+  // Save data in Firebase DB
+  console.log(userData);
+  rootRef.push(userData);
+
+}
