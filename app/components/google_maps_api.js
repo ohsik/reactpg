@@ -18,38 +18,40 @@ window.initMap = function() {
     anchorPoint: new google.maps.Point(0, -29)
   });
 
-
-  // TODO: read id from Firebase DB
+  // TODO: get data by loggedin user_id
+  // Make currentUser work
   // ------------------------------------------------------------------------------
   var latlngbounds = new google.maps.LatLngBounds();
+  // const currentUser = firebase.auth().currentUser.uid;
+  // console.log(currentUser);
 
-  var rootRef = firebase.database().ref('favs');
+  var rootRef = firebase.database().ref('places');
 
     // Retrieve new posts as they are added to our database
+  // rootRef.orderByChild("user_id").equalTo(currentUser).on("child_added", function(snapshot, prevChildKey) {
   rootRef.on("child_added", function(snapshot, prevChildKey) {
     var favPlace = snapshot.val();
-
     // Assign Geolocation to Google Maps markers
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(favPlace.fav_place.lat, favPlace.fav_place.lng),
+      position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
       map: map
     });
 
     // Add infowindow to markers
     google.maps.event.addListener(marker, 'click', (function(marker) {
       return function() {
-        infowindow.setContent('<div class="infowindow"><h2>' + favPlace.user_email + '</h2><h3>' + favPlace.fav_place.name + '</h3><p>' + favPlace.fav_place.address + '<p>' + favPlace.fav_place.phone + '</p> <a href="' + favPlace.fav_place.website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.fav_place.url + '" target="_blank" class="btn">See it on Google Map</a></p></div>');
+        infowindow.setContent('<div class="infowindow"><h2>' + favPlace.user_id + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
         infowindow.open(map, marker);
       }
     })(marker));
 
     latlngbounds.extend(marker.getPosition());
-    // console.log(latlngbounds);
     map.fitBounds(latlngbounds);
 
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
+
 
   autocomplete.addListener('place_changed', function() {
     infowindow.close();
@@ -92,34 +94,28 @@ window.initMap = function() {
     // test | add a save button
     var userPlace = place;
     window.save_it = function(){
-      sayHello(userPlace);
+      saveFavoritePlace(userPlace);
     }
 
   }); //autocomplete
 
 } //initMap
 
-function sayHello (userPlace){
-  var rootRef = firebase.database().ref('favs');
-
-  var userData = {
-    user_email: 'o@fabfitfun.com',
+function saveFavoritePlace (userPlace){
+  // Get current user_id
+  const currentUser = firebase.auth().currentUser.uid;
+  var rootRef = firebase.database().ref('places');
+  var userPlaceData = {
+    user_id: currentUser,
     google_place_id: userPlace.id,
-    friends: [
-    ],
-    fav_place: {
-      name: userPlace.name || null,
-      address: userPlace.formatted_address || null,
-      phone: userPlace.formatted_phone_number || null,
-      website: userPlace.website || null,
-      url: userPlace.url || null,
-      lat: userPlace.geometry.location.lat(),
-      lng: userPlace.geometry.location.lng()
-    }
+    place_name: userPlace.name || null,
+    place_address: userPlace.formatted_address || null,
+    place_phone: userPlace.formatted_phone_number || null,
+    place_website: userPlace.website || null,
+    place_url: userPlace.url || null,
+    place_lat: userPlace.geometry.location.lat(),
+    place_lng: userPlace.geometry.location.lng()
   }
-
   // Save data in Firebase DB
-  console.log(userData);
-  rootRef.push(userData);
-
+  rootRef.push(userPlaceData);
 }

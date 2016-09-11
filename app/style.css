@@ -12,18 +12,25 @@ body > #app{
   width: 100vw;
   height: 100vh;
   padding: 20px;
-  text-align: center;
   background: #eee;
 }
 .main-wrap{
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
+  text-align: center;
 }
-input.search{
+input{
   padding: 10px;
+  margin-bottom: 5px;
   width: 100%;
   font-size: 16px;
   border: 1px solid #fa5454;
+}
+.login{
+  padding: 10px 0;
+}
+.friend-list{
+  text-align: left;
 }
 .gmap{
   margin: 10px 0;
@@ -34,23 +41,36 @@ input.search{
 .infowindow{
   padding: 10px;
 }
+.info_btn{
+  margin: 10px 0;
+  display: inline-block;
+}
+.login button,
 .infowindow button,
 .get-email input[type="button"],
 .btn{
   border: none;
-  background: #fa5454;
-  color: #fff;
+  background: #ccc;
   padding: 10px;
-  display: inline-block;
   text-decoration: none;
 }
 .btn{
   width: 100%;
   margin: 10px 0;
 }
+.cta{
+  background: #fa5454;
+  color: #fff;
+}
+.login button{
+  margin: 5px;
+}
 .get-email input{
   width:100%;
   padding: 10px;
   margin-bottom: 5px;
   font-size: 16px;
+}
+.hide{
+  display: none;
 }
