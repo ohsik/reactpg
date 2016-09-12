@@ -21,37 +21,56 @@ window.initMap = function() {
   // TODO: get data by loggedin user_id
   // Make currentUser work
   // ------------------------------------------------------------------------------
-  var latlngbounds = new google.maps.LatLngBounds();
-  // const currentUser = firebase.auth().currentUser.uid;
-  // console.log(currentUser);
 
-  var rootRef = firebase.database().ref('places');
 
-    // Retrieve new posts as they are added to our database
-  // rootRef.orderByChild("user_id").equalTo(currentUser).on("child_added", function(snapshot, prevChildKey) {
-  rootRef.on("child_added", function(snapshot, prevChildKey) {
-    var favPlace = snapshot.val();
-    // Assign Geolocation to Google Maps markers
-    marker = new google.maps.Marker({
-      position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
-      map: map
-    });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      console.log('My user_id(google_maps_api): ' + user.uid);
+      // TODO: look up favorite places by user_id
+      var refUserPlace = firebase.database().ref('friends/' + user.uid);
+      refUserPlace.once('value', function(snapshot) {
+        console.log('Friends List(google_maps_api): ' + snapshot.val());
 
-    // Add infowindow to markers
-    google.maps.event.addListener(marker, 'click', (function(marker) {
-      return function() {
-        infowindow.setContent('<div class="infowindow"><h2>' + favPlace.user_id + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
-        infowindow.open(map, marker);
-      }
-    })(marker));
+        var latlngbounds = new google.maps.LatLngBounds();
+        var rootRef = firebase.database().ref('places');
+        // Retrieve new posts as they are added to our database
+        rootRef.on("child_added", function(snapshot, prevChildKey) {
+          var favPlace = snapshot.val();
+          // Assign Geolocation to Google Maps markers
+          marker = new google.maps.Marker({
+            position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
+            map: map
+          });
 
-    latlngbounds.extend(marker.getPosition());
-    map.fitBounds(latlngbounds);
+          // Add infowindow to markers
+          // favPlace show key
+          google.maps.event.addListener(marker, 'click', (function(marker) {
+            return function() {
+              //Get email address of friends
+              var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
+              refFavUserInfo.once('value', function(snapshot) {
+                const friendEmail = snapshot.val().user_email;
+                // Info window
+                infowindow.setContent('<div class="infowindow"><h2>' + friendEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                infowindow.open(map, marker);
+              });
+            }
+          })(marker));
 
-  }, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
+          latlngbounds.extend(marker.getPosition());
+          map.fitBounds(latlngbounds);
+
+        }, function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        });
+
+      });
+    } else {
+      // No user is signed in.
+      console.log('Please signin to start!');
+    }
   });
-
 
   autocomplete.addListener('place_changed', function() {
     infowindow.close();
@@ -104,18 +123,17 @@ window.initMap = function() {
 function saveFavoritePlace (userPlace){
   // Get current user_id
   const currentUser = firebase.auth().currentUser.uid;
-  var rootRef = firebase.database().ref('places');
+  var rootRef = firebase.database().ref('places/' + currentUser);
   var userPlaceData = {
-    user_id: currentUser,
-    google_place_id: userPlace.id,
-    place_name: userPlace.name || null,
-    place_address: userPlace.formatted_address || null,
-    place_phone: userPlace.formatted_phone_number || null,
-    place_website: userPlace.website || null,
-    place_url: userPlace.url || null,
-    place_lat: userPlace.geometry.location.lat(),
-    place_lng: userPlace.geometry.location.lng()
+      google_place_id: userPlace.id,
+      place_name: userPlace.name || null,
+      place_address: userPlace.formatted_address || null,
+      place_phone: userPlace.formatted_phone_number || null,
+      place_website: userPlace.website || null,
+      place_url: userPlace.url || null,
+      place_lat: userPlace.geometry.location.lat(),
+      place_lng: userPlace.geometry.location.lng()
   }
   // Save data in Firebase DB
-  rootRef.push(userPlaceData);
+  rootRef.set(userPlaceData);
 }

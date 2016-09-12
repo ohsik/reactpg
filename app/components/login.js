@@ -19,6 +19,8 @@ export default class Login extends React.Component {
       const rootRef = firebase.database().ref("users/" + firebaseUser.uid);
       const userInfo = {
           user_email: email,
+          user_first_name: '',
+          user_last_name: '',
           user_profile_pic: ''
         }
       rootRef.set(userInfo);
@@ -27,27 +29,16 @@ export default class Login extends React.Component {
   }
   componentDidMount(){
     // TODO: this can't select DOM element
+    // Say greeting after login
     const logoutBtn = document.getElementById('user_logout');
-    const loginBtn = document.getElementById('user_login');
-    const signupBtn = document.getElementById('user_signup');
-    const email = document.getElementById('user_email');
-    const password = document.getElementById('user_password');
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
-        console.log(firebaseUser.email + ' loggedin ' + logoutBtn);
+        console.log('My email(login.js):' + firebaseUser.email);
         // remove login form
-        email.classList.add('hide');
-        password.classList.add('hide');
-        loginBtn.classList.add('hide');
-        signupBtn.classList.add('hide');
         logoutBtn.classList.remove('hide');
       } else {
         console.log('not logged in from login.js');
-        email.classList.remove('hide');
-        password.classList.remove('hide');
-        loginBtn.classList.remove('hide');
-        signupBtn.classList.remove('hide');
         logoutBtn.classList.add('hide');
       }
     });
