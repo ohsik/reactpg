@@ -1,4 +1,5 @@
 import React from 'react';
+import { Router, Route, Link } from 'react-router'
 import './firebase.js';
 import Login from './login';
 import GMap from './gmap';
