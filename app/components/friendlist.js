@@ -9,17 +9,22 @@ export default class FriendList extends React.Component {
         var rootRef = firebase.database().ref('friends/' + user.uid);
         rootRef.once("value", function(snapshot) {
           var listOfFriends = snapshot.val();
-          var friendsListContainer = document.getElementById('friendsList');
-          for (var i = 0, len = listOfFriends.length; i < len; i++) {
-            var refFavUserInfo = firebase.database().ref('users/' + listOfFriends[i]);
+          if (listOfFriends !== null) {
+            var friendsListContainer = document.getElementById('friendsList');
 
-            refFavUserInfo.once('value', function(snapshot) {
-              const friendEmail = snapshot.val().user_email;
-              var entry = document.createElement('li');
-              entry.appendChild(document.createTextNode(friendEmail));
-              friendsListContainer.appendChild(entry);
-            });
+            for (var i = 0, len = listOfFriends.length; i < len; i++) {
+              var refFavUserInfo = firebase.database().ref('users/' + listOfFriends[i]);
 
+              refFavUserInfo.once('value', function(snapshot) {
+                const friendEmail = snapshot.val().user_email;
+                var entry = document.createElement('li');
+                entry.appendChild(document.createTextNode(friendEmail));
+                friendsListContainer.appendChild(entry);
+              });
+
+            }
+          }else{
+            console.log('You have no friends yet');
           }
         });
       } else {
@@ -33,7 +38,6 @@ export default class FriendList extends React.Component {
       // TODO: Load from DB
       <div>
         <ul className="friend-list" id="friendsList">
-
         </ul>
       </div>
     );

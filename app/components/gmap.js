@@ -1,6 +1,5 @@
-//https://www.youtube.com/watch?v=IR6smI_YJDE
-import React from 'react';
-import './google_maps_api.js';
+import React from 'react'
+import './google_maps_api.js'
 
 export default class GMap extends React.Component {
   render() {

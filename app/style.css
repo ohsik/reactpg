@@ -26,8 +26,11 @@ input{
   font-size: 16px;
   border: 1px solid #fa5454;
 }
-.login{
+.login,
+.addfriends{
   padding: 10px 0;
+  max-width: 400px;
+  margin: 0 auto;
 }
 .friend-list{
   text-align: left;

@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import './firebase.js'
 
 export default class Login extends React.Component {
   signinUser() {
@@ -21,7 +22,8 @@ export default class Login extends React.Component {
           user_email: email,
           user_first_name: '',
           user_last_name: '',
-          user_profile_pic: ''
+          user_profile_pic: '',
+          user_group: '',
         }
       rootRef.set(userInfo);
     });
@@ -34,7 +36,7 @@ export default class Login extends React.Component {
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
-        console.log('My email(login.js):' + firebaseUser.email);
+        console.log('My email(login.js): ' + firebaseUser.email);
         // remove login form
         logoutBtn.classList.remove('hide');
       } else {
