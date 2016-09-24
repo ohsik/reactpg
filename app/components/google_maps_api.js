@@ -27,46 +27,47 @@ firebase.auth().onAuthStateChanged(function(user) {
       console.log('My user_id(google_maps_api): ' + user.uid + ' / ' + user.email);
 
 
-      var refUserPlace = firebase.database().ref('friends/' + user.uid);
+      var refUserPlace = firebase.database().ref('users/' + user.uid);
 
       refUserPlace.once("value", function(snapshot) {
-        console.log('Friends List(google_maps_api): ' + snapshot.val());
+        var friendList = snapshot.val().friends;
+        if (snapshot.val().friends !== undefined){
 
-        // TODO: look up favorite places by user_id
-        //       line 41 should be updated with places from loggedin users friends list
-        if (snapshot.val() !== null){
-          var latlngbounds = new google.maps.LatLngBounds();
-          var rootRef = firebase.database().ref('places');
-          // Retrieve new posts as they are added to our database
-          rootRef.on("child_added", function(snapshot, prevChildKey) {
-            var favPlace = snapshot.val();
-            // Assign Geolocation to Google Maps markers
-            marker = new google.maps.Marker({
-              position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
-              map: map
+          for (var i = 0; i < friendList.length; i++) {
+            var latlngbounds = new google.maps.LatLngBounds();
+            var rootRef = firebase.database().ref('places/' + friendList[i]);
+
+            console.log(friendList[i]);
+            // Retrieve new posts as they are added to our database
+            rootRef.once("value", function(snapshot) {
+              var favPlace = snapshot.val();
+              // Assign Geolocation to Google Maps markers
+              marker = new google.maps.Marker({
+                position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
+                map: map
+              });
+
+              // Add infowindow to markers
+              // favPlace show key
+              google.maps.event.addListener(marker, 'click', (function(marker) {
+                return function() {
+                  //Get email address of friends
+                  var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
+                  refFavUserInfo.once('value', function(snapshot) {
+                    const friendEmail = snapshot.val().user_email;
+                    // Info window
+                    infowindow.setContent('<div class="infowindow"><h2>' + friendEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                    infowindow.open(map, marker);
+                  });
+                }
+              })(marker));
+
+              latlngbounds.extend(marker.getPosition());
+              map.fitBounds(latlngbounds);
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
             });
-
-            // Add infowindow to markers
-            // favPlace show key
-            google.maps.event.addListener(marker, 'click', (function(marker) {
-              return function() {
-                //Get email address of friends
-                var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
-                refFavUserInfo.once('value', function(snapshot) {
-                  const friendEmail = snapshot.val().user_email;
-                  // Info window
-                  infowindow.setContent('<div class="infowindow"><h2>' + friendEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
-                  infowindow.open(map, marker);
-                });
-              }
-            })(marker));
-
-            latlngbounds.extend(marker.getPosition());
-            map.fitBounds(latlngbounds);
-
-          }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
-          });
+          }
 
         }else{
           console.log('nothing to load cause u have no friends but showing your favorite place if you saved one');
@@ -78,7 +79,10 @@ firebase.auth().onAuthStateChanged(function(user) {
             // console.log(favPlace);
             if(favPlace !== null){
 
-              var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+              var image = {
+                url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/my-pin.png?alt=media&token=7d1139d6-3572-4518-8cb7-b4dc3028a32c',
+                scaledSize : new google.maps.Size(50, 50)
+              }
               marker = new google.maps.Marker({
                 position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
                 map: map,

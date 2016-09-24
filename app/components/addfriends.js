@@ -6,60 +6,31 @@ export default class AddFriends extends React.Component {
     if (this.frinedEamilAddress.value !== '') {
 
       // TODO: - add email validation and save data to DB
-      //       - change email address to Unique user_id eventually
-      //       - Make user_id Dynamic (LYcIHjA67cN22TzlCRxUwJbAWUg2)
-      //       - If no value in input, don't submit
+
       // Get current user_id
       const currentUser = firebase.auth().currentUser.uid;
-      const rootRef = firebase.database().ref('friends');
       const friendEmail = this.frinedEamilAddress.value;
+      const lookUpFriend = firebase.database().ref('users');
 
-      // get user_id from email
-      var refUserId = firebase.database().ref('users');
-      refUserId.once('value', function(snapshot) {
-        console.log(snapshot.val());
+      lookUpFriend.orderByChild("user_email").equalTo(friendEmail).on("value", function(snapshot){
+        if (snapshot.val() !== null){
+          var addedFriendUID = Object.keys(snapshot.val()).toString();
+          const saveFriend = firebase.database().ref('users/' + currentUser);
+          saveFriend.once('value', function(snapshot) {
+            const existingFriends = snapshot.val().friends;
 
-        for(var i in snapshot.val()) {
-
-            var refUserId = firebase.database().ref('users/' + i);
-            refUserId.once('value', function(snapshot) {
-                // TODO: add friends
-                console.log(snapshot.val().user_email);
-                console.log(friendEmail);
-                console.log(i);
-
-              if (snapshot.val().user_email == friendEmail){
-
-                  // console.log('Current loggedin user email: ' + snapshot.val().user_email);
-                  // console.log('Email added: ' + friendEmail);
-                  // // TODO: i is not getting the correct user_id of friendEmail
-                  // // NOT WORKING
-                  // console.log(i);
-                  // const addedFriendUID = i;
-                  // const existingFriend = {};
-                  // existingFriend[currentUser] = [addedFriendUID];
-                  //
-                  // // Get current data and add more
-                  // rootRef.once("value", function(snapshot) {
-                  //   const existingFriends = snapshot.child(currentUser).val();
-                  //   // if current user has no friends, add this or add this to exsiting friends
-                  //   if (existingFriends == null){
-                  //     rootRef.child(currentUser).set([addedFriendUID]);
-                  //   }else{
-                  //     const newFriends = existingFriends;
-                  //     newFriends.push(addedFriendUID);
-                  //     rootRef.child(currentUser).set(newFriends);
-                  //   }
-                  // });
-
-              } else {
-                console.log('Email has not registered on the site.');
-              }
-
-            });
-
+            // TODO: if email exist already, don't save it
+            if (existingFriends == null){
+              saveFriend.child('friends').set([addedFriendUID]);
+            }else{
+              const addMoreFriends = existingFriends
+              addMoreFriends.push(addedFriendUID);
+              saveFriend.child('friends').set(addMoreFriends);
+            }
+          });
+        }else{
+          console.log('User is not a memeber here... Send her an invite email.');
         }
-
       });
       this.frinedEamilAddress.value = '';
     }else{
