@@ -1,8 +1,3 @@
-//https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete
-
-// TODO: get data by loggedin user_id
-// Make currentUser work
-
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     function initMap() {
@@ -24,39 +19,51 @@ firebase.auth().onAuthStateChanged(function(user) {
         anchorPoint: new google.maps.Point(0, -29)
       });
       // User is signed in.
-      console.log('My user_id(google_maps_api): ' + user.uid + ' / ' + user.email);
-
-
-      var refUserPlace = firebase.database().ref('users/' + user.uid);
+      const currentUserID = user.uid;
+      var refUserPlace = firebase.database().ref('users/' + currentUserID);
 
       refUserPlace.once("value", function(snapshot) {
-        var friendList = snapshot.val().friends;
-        if (snapshot.val().friends !== undefined){
+        var followerList = snapshot.val().followers;
 
-          for (var i = 0; i < friendList.length; i++) {
+        if (snapshot.val().followers !== undefined){
+          followerList.push(currentUserID);
+
+          for (var i = 0; i < followerList.length; i++) {
             var latlngbounds = new google.maps.LatLngBounds();
-            var rootRef = firebase.database().ref('places/' + friendList[i]);
+            var rootRef = firebase.database().ref('places/' + followerList[i]);
+            const freindUID = followerList[i];
 
-            console.log(friendList[i]);
+            function addMyMarker(favPlace) {
+              if (freindUID == currentUserID){
+                var image = {
+                  url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/my-pin.png?alt=media&token=7d1139d6-3572-4518-8cb7-b4dc3028a32c',
+                  scaledSize : new google.maps.Size(50, 50)
+                }
+              }
+              marker = new google.maps.Marker({
+                position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
+                icon: image,
+                map: map
+              });
+            }
+
             // Retrieve new posts as they are added to our database
             rootRef.once("value", function(snapshot) {
               var favPlace = snapshot.val();
+
               // Assign Geolocation to Google Maps markers
-              marker = new google.maps.Marker({
-                position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
-                map: map
-              });
+              addMyMarker(favPlace);
 
               // Add infowindow to markers
               // favPlace show key
               google.maps.event.addListener(marker, 'click', (function(marker) {
                 return function() {
-                  //Get email address of friends
+                  //Get email address of people you follow
                   var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
                   refFavUserInfo.once('value', function(snapshot) {
-                    const friendEmail = snapshot.val().user_email;
+                    const followingEmail = snapshot.val().user_email;
                     // Info window
-                    infowindow.setContent('<div class="infowindow"><h2>' + friendEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                    infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
                     infowindow.open(map, marker);
                   });
                 }
@@ -70,7 +77,7 @@ firebase.auth().onAuthStateChanged(function(user) {
           }
 
         }else{
-          console.log('nothing to load cause u have no friends but showing your favorite place if you saved one');
+          console.log('nothing to load cause u have no followings but showing your favorite place if you saved one');
 
           var rootRef = firebase.database().ref('places/' + user.uid);
 
@@ -91,12 +98,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 
               google.maps.event.addListener(marker, 'click', (function(marker) {
                 return function() {
-                  //Get email address of friends
+                  //Get email address of people you follow
                   var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
                   refFavUserInfo.once('value', function(snapshot) {
-                    const friendEmail = snapshot.val().user_email;
+                    const followingEmail = snapshot.val().user_email;
                     // Info window
-                    infowindow.setContent('<div class="infowindow"><h2>' + friendEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                    infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
                     infowindow.open(map, marker);
                   });
                 }
@@ -115,7 +122,6 @@ firebase.auth().onAuthStateChanged(function(user) {
         }
 
       });
-
 
 
       autocomplete.addListener('place_changed', function() {
