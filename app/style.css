@@ -4,15 +4,12 @@
 }
 html, body{
   margin: 0;
-  background: #000;
   font-size: 16px;
   font-family: arial, helvetica;
 }
 body > #app{
   width: 100vw;
   height: 100vh;
-  padding: 20px;
-  background: #eee;
 }
 .main-wrap{
   max-width: 1000px;
@@ -27,7 +24,6 @@ input{
   margin-bottom: 5px;
   width: 100%;
   font-size: 16px;
-  border: 1px solid #fa5454;
 }
 .login,
 .addfollower{
@@ -48,9 +44,9 @@ input{
 }
 .gmap{
   margin: 10px 0;
-  border: 1px solid #fa5454;
   width: 100%;
-  min-height: 450px;
+  height: 60%;
+  height: 60vh;
 }
 .infowindow{
   padding: 10px;
@@ -72,6 +68,12 @@ input{
   width: 100%;
   margin: 10px 0;
 }
+#user_signup{
+  background: none;
+}
+.myplace{
+  padding: 10px;
+}
 .cta{
   background: #fa5454;
   color: #fff;
@@ -87,4 +89,29 @@ input{
 }
 .hide{
   display: none;
+}
+.remove-follower{
+  float: right;
+  cursor: pointer;
+  color: #fa5454;
+}
+header{
+  width: 100%;
+  background: #222;
+  color: #fff;
+  text-align: center;
+}
+nav a{
+  color: #fff;
+}
+header p,
+nav,
+nav li{
+  list-style: none;
+  display: inline-block;
+  padding: 6px;
+  margin: 0;
+}
+.active {
+  background-color: #0099FF;
 }

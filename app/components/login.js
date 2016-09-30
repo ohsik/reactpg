@@ -32,15 +32,21 @@ export default class Login extends React.Component {
   componentDidMount(){
     // TODO: this can't select DOM element
     // Say greeting after login
+    const logWrap = document.getElementById('login_wrap');
     const logoutBtn = document.getElementById('user_logout');
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
         console.log('My email(login.js): ' + firebaseUser.email);
+
+        // TODO: if user logs in successful, redirect them to map page
+        //       Add profile page
         // remove login form
+        logWrap.classList.add('hide');
         logoutBtn.classList.remove('hide');
       } else {
         console.log('not logged in from login.js');
+        logWrap.classList.remove('hide');
         logoutBtn.classList.add('hide');
       }
     });
@@ -57,11 +63,12 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="login">
-        <input placeholder="Your email" type="text" id="user_email"></input>
-        <input placeholder="Your password" type="password" id="user_password"></input>
-
-        <button id="user_login" onClick={this.signinUser.bind(this)}>Signin</button>
-        <button id="user_signup" onClick={this.signupUser.bind(this)}>Signup</button>
+        <div id="login_wrap" className="login-wrap">
+          <input placeholder="Your email" type="email" id="user_email"></input>
+          <input placeholder="Your password" type="password" id="user_password"></input>
+          <button id="user_login" onClick={this.signinUser.bind(this)}>Signin</button>
+          <button id="user_signup" onClick={this.signupUser.bind(this)}>Signup</button>
+        </div>
         <button id="user_logout" onClick={this.logoutUser.bind(this)} className="hide">Logout</button>
       </div>
     );
