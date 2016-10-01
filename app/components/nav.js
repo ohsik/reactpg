@@ -5,7 +5,7 @@ export default class Nav extends React.Component {
   render() {
     return (
       <header>
-        <p><b>FavShare</b></p>
+        <p><b>My App</b></p>
         <nav className="nav">
           <IndexLink to="/" activeClassName="active">
             <li>Profile</li>
