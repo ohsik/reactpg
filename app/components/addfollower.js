@@ -46,7 +46,7 @@ export default class AddFollower extends React.Component {
   }
   render() {
     return (
-      <div className="addfollower">
+      <div className="con--small">
         <input type="email" className="search" placeholder="Enter friend's email address" ref={(ref) => this.followEamilAddress = ref} required />
         <button onClick={this.addFollower.bind(this)} className="btn">Follow</button>
         <FollowingList />

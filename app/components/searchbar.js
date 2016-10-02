@@ -11,6 +11,7 @@ export default class SearchBar extends React.Component {
         var placeRef = firebase.database().ref('places/' + user.uid);
         placeRef.once('value', snapshot => {
           if (snapshot.val() !== null){
+            // TODO: if current user has a favorite place addBar becomes null.
             const addBar = document.getElementById('pac-input');
             const myPlace = document.getElementById('myPlace');
             addBar.classList.add('hide');

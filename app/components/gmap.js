@@ -32,8 +32,9 @@ export default class GMap extends React.Component {
             if (snapshot.val().followers !== undefined){
               followerList.push(currentUserID);
 
+              var latlngbounds = new google.maps.LatLngBounds();
+
               for (var i = 0; i < followerList.length; i++) {
-                var latlngbounds = new google.maps.LatLngBounds();
                 var rootRef = firebase.database().ref('places/' + followerList[i]);
                 const freindUID = followerList[i];
 
@@ -82,7 +83,6 @@ export default class GMap extends React.Component {
                 }, function (errorObject) {
                   console.log("The read failed: " + errorObject.code);
                 });
-
               }
 
             }else{

@@ -25,8 +25,7 @@ input{
   width: 100%;
   font-size: 16px;
 }
-.login,
-.addfollower{
+.con--small{
   padding: 10px 0;
   max-width: 400px;
   margin: 0 auto;
@@ -55,14 +54,14 @@ input{
   margin: 10px 0;
   display: inline-block;
 }
-.login button,
-.infowindow button,
-.get-email input[type="button"],
+button,
+input[type="button"],
 .btn{
   border: none;
   background: #ccc;
   padding: 10px;
   text-decoration: none;
+  border-radius: 4px;
 }
 .btn{
   width: 100%;
@@ -86,6 +85,7 @@ input{
   padding: 10px;
   margin-bottom: 5px;
   font-size: 16px;
+  border-radius: 4px;
 }
 .hide{
   display: none;

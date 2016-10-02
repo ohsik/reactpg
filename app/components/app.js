@@ -2,6 +2,18 @@ import React from 'react'
 import Nav from './nav'
 
 export default class App extends React.Component {
+  constructor() {
+    super();
+    this.state = { userAuth: '' };
+  }
+  componentDidMount(){
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if(firebaseUser){
+        this.setState({ userAuth: firebaseUser.uid });
+        // console.log(this.state);
+      }
+    });
+  }
   render() {
     return (
       <div>

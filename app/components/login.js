@@ -1,5 +1,6 @@
 import React from 'react'
 import './firebase.js'
+import { hashHistory } from 'react-router'
 
 export default class Login extends React.Component {
   signinUser() {
@@ -38,14 +39,13 @@ export default class Login extends React.Component {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
         console.log('My email(login.js): ' + firebaseUser.email);
+        hashHistory.push('/map')
 
-        // TODO: if user logs in successful, redirect them to map page
-        //       Add profile page
-        // remove login form
+        // Visual
         logWrap.classList.add('hide');
         logoutBtn.classList.remove('hide');
       } else {
-        console.log('not logged in from login.js');
+        console.log('Please login to start login.js');
         logWrap.classList.remove('hide');
         logoutBtn.classList.add('hide');
       }
@@ -62,7 +62,7 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <div className="login">
+      <div className="con--small">
         <div id="login_wrap" className="login-wrap">
           <input placeholder="Your email" type="email" id="user_email"></input>
           <input placeholder="Your password" type="password" id="user_password"></input>

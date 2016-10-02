@@ -42,23 +42,25 @@ export default class FollowingList extends React.Component {
   }
   removeFollower(email) {
     firebase.auth().onAuthStateChanged(function(user) {
-      const useRef = firebase.database().ref('users');
-      useRef.orderByChild("user_email").equalTo(email).on("value", (snapshot) => {
-        let userIdbyEmail = Object.keys(snapshot.val()).toString();
-        const removeFollow = firebase.database().ref('users/' + user.uid );
-        removeFollow.once('value', (snapshot) => {
-          let currentFollwer = snapshot.val().followers;
-          if (currentFollwer === undefined){
-            this.setState({ followerEmails: [] });
-          } else {
-            let index = currentFollwer.indexOf(userIdbyEmail);
-            if (index > -1) {
-              currentFollwer.splice(index, 1);
-              removeFollow.child('followers').set(currentFollwer);
+      if (user) {
+        const useRef = firebase.database().ref('users');
+        useRef.orderByChild("user_email").equalTo(email).on("value", (snapshot) => {
+          let userIdbyEmail = Object.keys(snapshot.val()).toString();
+          const removeFollow = firebase.database().ref('users/' + user.uid );
+          removeFollow.once('value', (snapshot) => {
+            let currentFollwer = snapshot.val().followers;
+            if (currentFollwer === undefined){
+              this.setState({ followerEmails: [] });
+            } else {
+              let index = currentFollwer.indexOf(userIdbyEmail);
+              if (index > -1) {
+                currentFollwer.splice(index, 1);
+                removeFollow.child('followers').set(currentFollwer);
+              }
             }
-          }
+          });
         });
-      });
+      }
     }.bind(this));;
   }
   render() {
