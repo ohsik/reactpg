@@ -62,12 +62,12 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <div className="con--small">
+      <div className="container container--xs">
         <div id="login_wrap" className="login-wrap">
           <input placeholder="Your email" type="email" id="user_email"></input>
           <input placeholder="Your password" type="password" id="user_password"></input>
-          <button id="user_login" onClick={this.signinUser.bind(this)}>Signin</button>
-          <button id="user_signup" onClick={this.signupUser.bind(this)}>Signup</button>
+          <button id="user_login" onClick={this.signinUser.bind(this)}>Login</button>
+          <button id="user_signup" onClick={this.signupUser.bind(this)}>Create account</button>
         </div>
         <button id="user_logout" onClick={this.logoutUser.bind(this)} className="hide">Logout</button>
       </div>

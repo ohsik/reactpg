@@ -34,7 +34,7 @@ export default class SearchBar extends React.Component {
   render() {
     let myPlace = <div id="myPlace" className="myplace hide"><b>{this.state.place_name}</b> ({this.state.place_address}) <span onClick={this.changePlace.bind(this)} className="remove-follower">Change</span></div>;
     return (
-      <div>
+      <div className="container container--small">
         {myPlace}
         <input id="pac-input" placeholder="Add your favorite restaurant by typing the name of restaurant" type="text" className="hide"></input>
       </div>

@@ -68,7 +68,7 @@ export default class GMap extends React.Component {
                         refFavUserInfo.on('value', function(snapshot) {
                           const followingEmail = snapshot.val().user_email;
                           // Info window
-                          infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                          infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn cta">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn cta">See it on Google Map</a></div></div>');
                           infowindow.open(map, marker);
                         });
                       }
@@ -112,7 +112,7 @@ export default class GMap extends React.Component {
                       refFavUserInfo.on('value', function(snapshot) {
                         const followingEmail = snapshot.val().user_email;
                         // Info window
-                        infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn">See it on Google Map</a></div></div>');
+                        infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn cta">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn cta">See it on Google Map</a></div></div>');
                         infowindow.open(map, marker);
                       });
                     }

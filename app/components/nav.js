@@ -2,7 +2,7 @@ import React from 'react'
 import { IndexLink, Link } from 'react-router'
 
 export default class Nav extends React.Component {
-  componentDidMount() {
+  componentWillMount() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       const followLink = document.getElementById('follow_link');
       const profileLink = document.getElementById('profile_link');
@@ -12,7 +12,7 @@ export default class Nav extends React.Component {
         profileLink.classList.remove('hide');
       } else {
         followLink.classList.add('hide');
-        profileLink.classList.add('hide');        
+        profileLink.classList.add('hide');
       }
     });
   }
@@ -20,15 +20,15 @@ export default class Nav extends React.Component {
     return (
       <header>
         <nav className="nav">
-          <IndexLink to="/" activeClassName="active">
-            <li><b>App</b></li>
-          </IndexLink>
-          <Link to="/follow" activeClassName="active" id="follow_link">
-            <li>Follow</li>
-          </Link>
-          <Link to="/profile" activeClassName="active" id="profile_link">
-            <li>Profile</li>
-          </Link>
+          <li>
+            <IndexLink to="/" activeClassName="active">ShareFav</IndexLink>
+          </li>
+          <li>
+            <Link to="/follow" activeClassName="active" id="follow_link">Follow</Link>
+          </li>
+          <li>
+            <Link to="/profile" activeClassName="active" id="profile_link">Profile</Link>
+          </li>
         </nav>
       </header>
     );

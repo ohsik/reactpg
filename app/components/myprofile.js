@@ -58,16 +58,28 @@ export default class MyProfile extends React.Component {
   }
   render() {
     return (
-      <div className="con--small">
+      <div className="container container--xs">
         <form>
+          <label>Email</label>
           <input type="email" value={this.state.myEmail} onChange={this.emailChange.bind(this)} placeholder="Email Address" />
-          <input type="text" value={this.state.myFirstName} onChange={this.fnameChange.bind(this)} placeholder="First Name" />
-          <input type="text" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
-          <input type="file" name="img" />
-          <button onClick={this.updateProfile.bind(this)} className="btn">Update Profile</button>
-        </form>
 
-        <button id="user_logout" onClick={this.logoutUser.bind(this)}>Logout</button>
+          <label>Name</label>
+          <div className="row">
+            <input type="text" className="col" value={this.state.myFirstName} onChange={this.fnameChange.bind(this)} placeholder="First Name" />
+            <input type="text" className="col" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
+          </div>
+
+          <label>Profile Picture</label>
+          <input type="file" name="img" />
+
+          <label>Reset Password</label>
+          <input type="password" placeholder="New Password" />
+          <input type="password" placeholder="Re-enter Password" />
+          <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>
+        </form>
+        <div className="login-wrap">
+          <button id="user_logout" onClick={this.logoutUser.bind(this)}>Logout</button>
+        </div>
       </div>
     );
   }
