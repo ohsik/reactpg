@@ -13,7 +13,7 @@ render((
     <Route path="/" component={App}>
       <IndexRoute header="Share your favorites!" component={Login} />
       <Route path="/login" header="Please Login to continue..." component={Login} />
-      <Route path="/follow" header="Manage Followers" component={AddFollower} />
+      <Route path="/follow" header="Manage Follow" component={AddFollower} />
       <Route path="/map" header="Favorite Restaurants" component={MapSearch} />
       <Route path="/profile" header="My Profile" component={MyProfile} />
     </Route>

@@ -1,42 +1,71 @@
-import React from 'react';
+import React from 'react'
 
 export default class SearchBar extends React.Component {
   constructor() {
     super();
-    this.state = { place_name: '', place_address: '' };
+    this.state = {
+      place_name: '',
+      place_address: '',
+      hasPlace: false,
+      btnText: ''
+    };
   }
-  componentWillMount() {
+  componentDidMount() {
     firebase.auth().onAuthStateChanged(function(user) {
+      const myPlaceInfo = document.getElementById('myPlaceInfo');
+      const pacInput = document.getElementById('pac-input');
+
       if (user) {
         var placeRef = firebase.database().ref('places/' + user.uid);
         placeRef.once('value', snapshot => {
           if (snapshot.val() !== null){
-            // TODO: if current user has a favorite place addBar becomes null.
-            const addBar = document.getElementById('pac-input');
-            const myPlace = document.getElementById('myPlace');
-            addBar.classList.add('hide');
-            myPlace.classList.remove('hide');
-            this.setState({ place_name: snapshot.val().place_name, place_address: snapshot.val().place_address });
+            this.setState({
+              place_name: snapshot.val().place_name,
+              place_address: snapshot.val().place_address,
+              hasPlace: true,
+              btnText: 'Change'
+            });
+            myPlaceInfo.classList.remove('hide');
           }else{
-            const addBar = document.getElementById('pac-input');
-            addBar.classList.remove('hide');
+            this.setState({
+              hasPlace: false
+            });
+            pacInput.classList.remove('hide');
           }
         });
       }
     }.bind(this));
   }
   changePlace() {
-    const addBar = document.getElementById('pac-input');
-    const myPlace = document.getElementById('myPlace');
-    addBar.classList.remove('hide');
-    myPlace.classList.add('hide');
+    const myPlaceInfo = document.getElementById('myPlaceInfo');
+    const pacInput = document.getElementById('pac-input');
+
+    if(this.state.hasPlace === true){
+      this.setState({
+        hasPlace: false,
+        btnText: 'Cancel'
+      });
+      myPlaceInfo.classList.add('hide');
+      pacInput.classList.remove('hide');
+    }else{
+      this.setState({
+        hasPlace: true,
+        btnText: 'Change'
+      });
+      pacInput.classList.add('hide');
+      myPlaceInfo.classList.remove('hide');
+    }
   }
   render() {
-    let myPlace = <div id="myPlace" className="myplace hide"><b>{this.state.place_name}</b> ({this.state.place_address}) <span onClick={this.changePlace.bind(this)} className="remove-follower">Change</span></div>;
+    let myPlace = <span onClick={this.changePlace.bind(this)} className="change-place">{this.state.btnText}</span>;
+
     return (
       <div className="container container--small">
-        {myPlace}
-        <input id="pac-input" placeholder="Add your favorite restaurant by typing the name of restaurant" type="text" className="hide"></input>
+        <div className="myplace">
+          <div id="myPlaceInfo" className="hide"><b>{this.state.place_name}</b> ({this.state.place_address})</div>
+          <input id="pac-input" className="hide" placeholder="Add your favorite restaurant by typing the name of restaurant" type="text"></input>
+          {myPlace}
+        </div>
       </div>
     );
   }

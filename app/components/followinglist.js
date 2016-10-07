@@ -3,7 +3,10 @@ import React from 'react'
 export default class FollowingList extends React.Component {
   constructor() {
     super();
-    this.state = { followerEmails: [], followersLoaded: false };
+    this.state = {
+      followerEmails: [],
+      followersLoaded: false
+    };
   }
   componentDidMount() {
     firebase.auth().onAuthStateChanged(function(user) {
@@ -20,7 +23,7 @@ export default class FollowingList extends React.Component {
             let followerRefs = listOfFollower.map((followerId) => {
               return firebase.database().ref(`users/${followerId}`);
             }).forEach((followerRef) => {
-              followerRef.on('value', (snapshot) => {
+              followerRef.once('value', (snapshot) => {
                 followerEmails.push(snapshot.val().user_email);
                 this.setState({ followerEmails: followerEmails });
 

@@ -86,7 +86,7 @@ export default class GMap extends React.Component {
               }
 
             }else{
-              console.log('nothing to load cause u have no followings but showing your favorite place if you saved one');
+              console.log('Nothing to load cause u have no followings but showing your favorite place if you saved one');
 
               var rootRef = firebase.database().ref('places/' + user.uid);
 
@@ -122,7 +122,7 @@ export default class GMap extends React.Component {
                   map.setCenter(latLng);
 
                 }else{
-                  console.log('Please Add your favorite restaurant! You can only have on at a time.');
+                  console.log('Please Add your favorite restaurant! You can only have One at a time :)');
                 }
 
               }, function (errorObject) {

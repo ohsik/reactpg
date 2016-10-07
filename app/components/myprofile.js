@@ -8,7 +8,8 @@ export default class MyProfile extends React.Component {
       myUid: '',
       myEmail: '',
       myFirstName: '',
-      myLastName: ''
+      myLastName: '',
+      errorMsg: ''
      };
   }
   componentDidMount() {
@@ -40,13 +41,33 @@ export default class MyProfile extends React.Component {
   }
   //TODO: upload pic function implementation
   updateProfile(){
-    const rootRef = firebase.database().ref("users/" + this.state.myUid);
+    const userRef = firebase.database().ref("users/" + this.state.myUid);
     const userInfo = {
         user_email: this.state.myEmail,
         user_first_name: this.state.myFirstName,
         user_last_name: this.state.myLastName
       }
-    rootRef.update(userInfo);
+    userRef.update(userInfo);
+    this.setState({
+      errorMsg: 'Profile updated!'
+    });
+  }
+  resetPassword() {
+    const auth = firebase.auth();
+    const emailAddress = this.state.myEmail;
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+      // Email sent.
+      console.log('Reset password email sent!');
+      this.setState({
+        errorMsg: 'Reset password email sent!'
+      });
+    }.bind(this), function(error) {
+      // An error happened.
+      console.log('Error occurred while sending a reset password email.');
+      this.setState({
+        errorMsg: 'Error occurred while sending a reset password email.'
+      });
+    }.bind(this));
   }
   logoutUser() {
     firebase.auth().signOut().then(function() {
@@ -69,15 +90,14 @@ export default class MyProfile extends React.Component {
             <input type="text" className="col" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
           </div>
 
-          <label>Profile Picture</label>
-          <input type="file" name="img" />
+          {/* <label>Profile Picture</label>
+          <input type="file" name="img" /> */}
 
-          <label>Reset Password</label>
-          <input type="password" placeholder="New Password" />
-          <input type="password" placeholder="Re-enter Password" />
+          <div className="error-msg">{this.state.errorMsg}</div>
           <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>
         </form>
         <div className="login-wrap">
+          <button onClick={this.resetPassword.bind(this)}>Reset Password</button>
           <button id="user_logout" onClick={this.logoutUser.bind(this)}>Logout</button>
         </div>
       </div>

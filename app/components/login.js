@@ -3,13 +3,24 @@ import './firebase.js'
 import { hashHistory } from 'react-router'
 
 export default class Login extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      errorMsg: ''
+    };
+  }
   signinUser() {
     const email = document.getElementById('user_email').value;
     const password = document.getElementById('user_password').value;
     const auth = firebase.auth();
 
     const promise = auth.signInWithEmailAndPassword(email, password);
-    promise.catch(e => console.log(e.message));
+    promise.catch(e => {
+      this.setState({
+        errorMsg: e.message
+      });
+      console.log(e.message);
+    });
   }
   signupUser() {
     const email = document.getElementById('user_email').value;
@@ -28,7 +39,12 @@ export default class Login extends React.Component {
         }
       rootRef.set(userInfo);
     });
-    promise.catch(e => console.log(e.message));
+    promise.catch(e => {
+      this.setState({
+        errorMsg: e.message
+      });
+      console.log(e.message);
+    });
   }
   componentDidMount(){
     // TODO: this can't select DOM element
@@ -64,8 +80,11 @@ export default class Login extends React.Component {
     return (
       <div className="container container--xs">
         <div id="login_wrap" className="login-wrap">
-          <input placeholder="Your email" type="email" id="user_email"></input>
-          <input placeholder="Your password" type="password" id="user_password"></input>
+          <input placeholder="Email" type="email" id="user_email"></input>
+          <input placeholder="Password" type="password" id="user_password"></input>
+
+          <div className="error-msg">{this.state.errorMsg}</div>
+
           <button id="user_login" onClick={this.signinUser.bind(this)}>Login</button>
           <button id="user_signup" onClick={this.signupUser.bind(this)}>Create account</button>
         </div>
