@@ -23,6 +23,12 @@ export default class Login extends React.Component {
     });
   }
   signupUser() {
+    // https://gist.github.com/sararob/331760829a9dcb4be3e7
+    // 0 - GUEST
+    // 10 - USER
+    // 20 - MODERATOR
+    // 99 - ADMINISTRATOR
+
     const email = document.getElementById('user_email').value;
     const password = document.getElementById('user_password').value;
     const auth = firebase.auth();
@@ -35,7 +41,8 @@ export default class Login extends React.Component {
           user_first_name: '',
           user_last_name: '',
           user_profile_pic: '',
-          user_group: '',
+          user_group: [],
+          user_role: '10'
         }
       rootRef.set(userInfo);
     });
@@ -55,7 +62,7 @@ export default class Login extends React.Component {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
         console.log('My email(login.js): ' + firebaseUser.email);
-        hashHistory.push('/map')
+        hashHistory.push('/map');
 
         // Visual
         logWrap.classList.add('hide');

@@ -58,8 +58,12 @@ Extra Layout - 33%
 .content-wrap{
   padding: 10px;
 }
-.content-wrap h1{
+.content-wrap h1,
+.container > h2{
   text-align: center;
+}
+.content-wrap h2{
+  color: #3688f4;
 }
 .login-wrap{
   text-align: center;
@@ -127,6 +131,7 @@ nav li{
   display: inline-block;
   padding: 6px;
   margin: 0 5px;
+  vertical-align: top;
 }
 nav a{
   color: #fff;
@@ -182,7 +187,7 @@ label{
   margin: 10px 0 2px 0;
 }
 .error-msg{
-  padding: 10px;
+  padding: 4px;
   font-size: 12px;
   color: #f44336;
 }

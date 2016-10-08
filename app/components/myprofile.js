@@ -1,5 +1,6 @@
 import React from 'react'
 import { hashHistory } from 'react-router'
+import SearchBar from './searchbar'
 
 export default class MyProfile extends React.Component {
   constructor() {
@@ -17,7 +18,6 @@ export default class MyProfile extends React.Component {
       if(firebaseUser){
         const myRef = firebase.database().ref("users/" + firebaseUser.uid);
         myRef.once('value', snapshot => {
-          // console.log(snapshot.val());
           this.setState({
             myUid: firebaseUser.uid,
             myEmail: firebaseUser.email,
@@ -72,7 +72,7 @@ export default class MyProfile extends React.Component {
   logoutUser() {
     firebase.auth().signOut().then(function() {
       console.log('Signout Success');
-      hashHistory.push('/login')
+      hashHistory.push('/login');
     }, function(error) {
       console.log(error);
     });
@@ -80,22 +80,20 @@ export default class MyProfile extends React.Component {
   render() {
     return (
       <div className="container container--xs">
-        <form>
-          <label>Email</label>
-          <input type="email" value={this.state.myEmail} onChange={this.emailChange.bind(this)} placeholder="Email Address" />
+        <label>Email</label>
+        <input type="email" value={this.state.myEmail} onChange={this.emailChange.bind(this)} placeholder="Email Address" />
 
-          <label>Name</label>
-          <div className="row">
-            <input type="text" className="col" value={this.state.myFirstName} onChange={this.fnameChange.bind(this)} placeholder="First Name" />
-            <input type="text" className="col" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
-          </div>
+        <label>Name</label>
+        <div className="row">
+          <input type="text" className="col" value={this.state.myFirstName} onChange={this.fnameChange.bind(this)} placeholder="First Name" />
+          <input type="text" className="col" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
+        </div>
 
-          {/* <label>Profile Picture</label>
-          <input type="file" name="img" /> */}
+        {/* <label>Profile Picture</label>
+        <input type="file" name="img" /> */}
 
-          <div className="error-msg">{this.state.errorMsg}</div>
-          <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>
-        </form>
+        <div className="error-msg">{this.state.errorMsg}</div>
+        <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>
         <div className="login-wrap">
           <button onClick={this.resetPassword.bind(this)}>Reset Password</button>
           <button id="user_logout" onClick={this.logoutUser.bind(this)}>Logout</button>

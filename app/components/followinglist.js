@@ -11,8 +11,8 @@ export default class FollowingList extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        let FollowerList = firebase.database().ref('users/' + user.uid);
-        FollowerList.on("value", snapshot => {
+        let followerList = firebase.database().ref('users/' + user.uid);
+        followerList.on("value", snapshot => {
           let listOfFollower = snapshot.val().followers;
 
           if (listOfFollower !== undefined) {

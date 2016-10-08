@@ -41,7 +41,7 @@ export default class GMap extends React.Component {
                 function addMyMarker(favPlace) {
                   if (freindUID == currentUserID){
                     var image = {
-                      url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/my-pin.png?alt=media&token=7d1139d6-3572-4518-8cb7-b4dc3028a32c',
+                      url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
                       scaledSize : new google.maps.Size(50, 50)
                     }
                   }
