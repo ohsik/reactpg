@@ -4,10 +4,11 @@ export default class GMap extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
+        var map;
         function initMap() {
 
           // Create a map object and specify the DOM element for display.
-          var map = new google.maps.Map(document.getElementById('map'), {
+          map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 34.0778738, lng: -118.3780315},
             zoom: 10
           });
@@ -29,7 +30,7 @@ export default class GMap extends React.Component {
           refUserPlace.on("value", function(snapshot) {
             var followerList = snapshot.val().followers;
 
-            if (snapshot.val().followers !== undefined){
+            if (followerList !== undefined){
               followerList.push(currentUserID);
 
               var latlngbounds = new google.maps.LatLngBounds();
@@ -42,7 +43,7 @@ export default class GMap extends React.Component {
                   if (freindUID == currentUserID){
                     var image = {
                       url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
-                      scaledSize : new google.maps.Size(50, 50)
+                      scaledSize : new google.maps.Size(30, 30)
                     }
                   }
                   marker = new google.maps.Marker({
@@ -133,6 +134,13 @@ export default class GMap extends React.Component {
           });
 
 
+          //Load Group markers
+          currentUserGroups(currentUserID);
+
+
+
+
+
           autocomplete.addListener('place_changed', function() {
             infowindow.close();
             marker.setVisible(false);
@@ -181,11 +189,89 @@ export default class GMap extends React.Component {
 
         } //initMap
         initMap();
+
       } else {
         // No user is signed in.
         console.log('Please signin to start!');
       }
     });
+
+    function currentUserGroups(currentUserID) {
+      console.log(currentUserID);
+      let groupsRef = firebase.database().ref('groups');
+      groupsRef.once("value", (snapshot) => {
+
+        let totalGroups = Object.keys(snapshot.val());
+        let memberGroups = [];
+        totalGroups.map((groupId) => {
+          let groupRef = firebase.database().ref(`groups/${groupId}`);
+          groupRef.once("value", (snapshot) => {
+            let listOfMembers = snapshot.val().group_members;
+            let nameOfGroups = snapshot.val().group_name;
+            if (listOfMembers.indexOf(currentUserID) < 0) {
+              console.log('Not a member of ' + nameOfGroups);
+            }else{
+              memberGroups.push(nameOfGroups);
+              console.log('Member of ' + nameOfGroups);
+
+              // console.log(memberGroups);
+              // TODO: Array looks okay but Map goes through one more array value
+              memberGroups.map((memberGroupName) => {
+                groupsRef.orderByChild("group_name").equalTo(memberGroupName).once("value", (snap) => {
+                  let groupID = Object.keys(snap.val()).toString();
+
+                  let userGroupRef = firebase.database().ref(`groups/${groupID}`);
+                  userGroupRef.once("value", (snapshot) => {
+                    let eachGroupMembers = snapshot.val().group_members;
+
+                    eachGroupMembers.map((memberID) => {
+                      let placeRef = firebase.database().ref(`places/${memberID}`);
+                      placeRef.once('value', (snap) => {
+                        let memberData = snap.val();
+
+                        memberGroups.map((setNameOfGroup) => {
+                          let newGroupObj = {setNameOfGroup, userid: memberID, favPlace: memberData};
+                          let favPlace = newGroupObj.favPlace;
+
+                          console.log(newGroupObj);
+                          // TODO: Display places by group
+                          // var map = new google.maps.Map(document.getElementById('map'), {
+                          //   center: {lat: 34.0778738, lng: -118.3780315},
+                          //   zoom: 10
+                          // });
+                          //
+                          // var latlng = new google.maps.LatLng(42.745334, 12.738430);
+                          // var marker = new google.maps.Marker({
+                          //     position: latlng,
+                          //     title: 'new marker',
+                          //     draggable: true,
+                          //     map: map
+                          // });
+                          // marker.setMap(map);
+
+
+
+
+
+
+
+                        });
+
+                      });
+                    });
+
+
+                  });
+                });
+              });
+
+
+            }
+          });
+        });
+
+      });
+    }
 
     function saveFavoritePlace (userPlace){
       const currentUser = firebase.auth().currentUser.uid;

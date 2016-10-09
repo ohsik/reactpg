@@ -29,7 +29,7 @@ export default class AddFollower extends React.Component {
                 }else{
                   let alreadyFollowing = existingFollower.indexOf(addedFollowerUID);
                   if (alreadyFollowing < 0) {
-                    var addMoreFollower = existingFollower;
+                    let addMoreFollower = existingFollower;
                     addMoreFollower.push(addedFollowerUID);
                     saveFollower.child('followers').set(addMoreFollower);
                   }else{
@@ -68,6 +68,7 @@ export default class AddFollower extends React.Component {
         <input type="email" className="search" placeholder="Enter friend's email address" ref={(ref) => this.followEamilAddress = ref} required />
         <div className="error-msg">{this.state.errorMsg}</div>
         <button onClick={this.addFollower.bind(this)} className="btn btn--full">Follow</button>
+
         <FollowingList />
       </div>
     );

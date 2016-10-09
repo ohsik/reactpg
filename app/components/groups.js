@@ -7,7 +7,7 @@ export default class Groups extends React.Component {
     this.state = {
       group_name: '',
       group_status: '',
-      group_member: [],
+      group_members: [],
       errorMsg: ''
      };
   }
@@ -22,7 +22,7 @@ export default class Groups extends React.Component {
               group_created_by: currentUser,
               group_name: this.state.group_name,
               group_status: '0',
-              group_member: []
+              group_members: [currentUser]
             }
             groupRef.once("value", (snapshot) => {
               let groupName = snapshot.val();
