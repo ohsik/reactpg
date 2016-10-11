@@ -13,13 +13,13 @@ import './style.css'
 render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRoute header="Share your favorites!" component={Login} />
-      <Route path="/login" header="Please Login to continue..." component={Login} />
-      <Route path="/follow" header="Manage Follow" component={AddFollower} />
-      <Route path="/map" header="Favorite Restaurants" component={MapSearch} />
-      <Route path="/profile" header="My Profile" component={MyProfile} />
-      <Route path="/group" header="Manage Group" component={Groups} />
-      <Route path="group/:group" header="Manage Group" component={Group} />
+      <IndexRoute cc="login" header="Share your favorite restaurant!" component={Login} />
+      <Route path="/login" cc="login" header="Please Login to continue..." component={Login} />
+      <Route path="/follow" cc="follow" header="Manage Follow" component={AddFollower} />
+      <Route path="/map" cc="map" header="Favorite Restaurants" component={MapSearch} />
+      <Route path="/profile" cc="profile" header="My Profile" component={MyProfile} />
+      <Route path="/group" cc="group" header="Manage Group" component={Groups} />
+      <Route path="group/:group" cc="manage-group" header="Manage Group" component={Group} />
     </Route>
   </Router>
 ), document.getElementById('app'));

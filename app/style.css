@@ -51,12 +51,21 @@ Extra Layout - 33%
 }
 
 /*Custom layout*/
+.login{
+  height: 100%;
+}
+.login .content-wrap{
+  margin-top: 4%;
+}
 .sharefav-app{
   width: 100vw;
   height: 100vh;
 }
 .content-wrap{
   padding: 10px;
+}
+h1, h2{
+  margin-bottom: 10px;
 }
 .content-wrap h1,
 .container > h2{
@@ -65,7 +74,7 @@ Extra Layout - 33%
 .content-wrap h2{
   color: #3688f4;
 }
-.login-wrap{
+.t-c{
   text-align: center;
 }
 .follower-list{
@@ -124,6 +133,7 @@ header{
   left: 0;
   border-radius: 0 0 20px 0;
   -moz-border-radius: 0 0 20px 0;
+  display: inline-block;
 }
 nav,
 nav li{
@@ -139,7 +149,7 @@ nav a{
   font-size: 12px;
 }
 .active {
-  color: #ffe400;
+  color: #fde766;
 }
 /*Form elements*/
 input{
@@ -211,7 +221,6 @@ Media query
     flex: 0 0 100%;
   }
   header{
-    width: 100%;
     background: #f44336;
     color: #fff;
     position: static;

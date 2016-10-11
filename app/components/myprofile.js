@@ -94,7 +94,7 @@ export default class MyProfile extends React.Component {
 
         <div className="error-msg">{this.state.errorMsg}</div>
         <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>
-        <div className="login-wrap">
+        <div className="t-c">
           <button onClick={this.resetPassword.bind(this)}>Reset Password</button>
           <button id="user_logout" onClick={this.logoutUser.bind(this)}>Logout</button>
         </div>

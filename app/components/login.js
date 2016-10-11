@@ -85,17 +85,20 @@ export default class Login extends React.Component {
   }
   render() {
     return (
-      <div className="container container--xs">
-        <div id="login_wrap" className="login-wrap">
-          <input placeholder="Email" type="email" id="user_email"></input>
-          <input placeholder="Password" type="password" id="user_password"></input>
+      <div>
+        <p className="t-c">Share yours & see all your frineds favorites at one place</p>
+        <div className="container container--xs">
+          <div id="login_wrap" className="t-c">
+            <input placeholder="Email" type="email" id="user_email"></input>
+            <input placeholder="Password" type="password" id="user_password"></input>
 
-          <div className="error-msg">{this.state.errorMsg}</div>
+            <div className="error-msg">{this.state.errorMsg}</div>
 
-          <button id="user_login" onClick={this.signinUser.bind(this)}>Login</button>
-          <button id="user_signup" onClick={this.signupUser.bind(this)}>Create account</button>
+            <button id="user_login" onClick={this.signinUser.bind(this)}>Login</button>
+            <button id="user_signup" onClick={this.signupUser.bind(this)}>Create account</button>
+          </div>
+          <button id="user_logout" onClick={this.logoutUser.bind(this)} className="hide">Logout</button>
         </div>
-        <button id="user_logout" onClick={this.logoutUser.bind(this)} className="hide">Logout</button>
       </div>
     );
   }
