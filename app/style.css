@@ -117,7 +117,7 @@ h1, h2{
 .change-place{
   float: right;
   cursor: pointer;
-  color: #fa5454;
+  color: #f44336;
 }
 .change-place{
   float: none;
@@ -189,6 +189,9 @@ input[type="button"],
 .btn--full{
   width: 100%;
 }
+.color-primary{
+  color: #3688f4;
+}
 label{
   font-size: 12px;
   font-weight: 700;
@@ -202,7 +205,7 @@ label{
   color: #f44336;
 }
 .cta{
-  background: #fa5454;
+  background: #f44336;
   color: #fff;
 }
 .hide{

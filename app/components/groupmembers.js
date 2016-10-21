@@ -14,10 +14,12 @@ export default class GroupMembers extends React.Component {
       if (user) {
         const groupRef = firebase.database().ref('groups');
         groupRef.orderByChild("group_name").equalTo(this.props.groupName).on("value", (snapshot) => {
-          let groupID = Object.keys(snapshot.val()).toString();
-          this.setState({
-            currentGroupID: groupID
-          });
+          if (snapshot.val() !== null){
+            let groupID = Object.keys(snapshot.val()).toString();
+            this.setState({
+              currentGroupID: groupID
+            });
+          }
         });
       }
     }.bind(this));
@@ -27,35 +29,38 @@ export default class GroupMembers extends React.Component {
       if (user) {
         const groupRef = firebase.database().ref('groups');
         groupRef.orderByChild("group_name").equalTo(this.props.groupName).on("value", (snapshot) => {
-          let groupID = Object.keys(snapshot.val()).toString();
-          this.setState({
-            currentGroupID: groupID
-          });
-          const memberList = firebase.database().ref('groups/' + this.state.currentGroupID);
-          memberList.on("value", snapshot => {
-            let listOfMember = snapshot.val().group_members;
+          if (snapshot.val() !== null){
+            let groupID = Object.keys(snapshot.val()).toString();
+            this.setState({
+              currentGroupID: groupID
+            });
 
-            if (listOfMember !== undefined) {
-              this.setState({ memberLoaded: false });
-              let loadedMembers = 0;
-              let memberEmails = [];
-              let memberRefs = listOfMember.map((memberId) => {
-                return firebase.database().ref(`users/${memberId}`);
-              }).forEach((memberRef) => {
-                memberRef.once('value', (snapshot) => {
-                  memberEmails.push(snapshot.val().user_email);
-                  this.setState({ memberEmails: memberEmails });
+            const memberList = firebase.database().ref('groups/' + this.state.currentGroupID);
+            memberList.on("value", snapshot => {
+              let listOfMember = snapshot.val().group_members;
 
-                  if (++loadedMembers === listOfMember.length) {
-                    this.setState({ memberLoaded: true });
-                  }
+              if (listOfMember !== undefined) {
+                this.setState({ memberLoaded: false });
+                let loadedMembers = 0;
+                let memberEmails = [];
+                let memberRefs = listOfMember.map((memberId) => {
+                  return firebase.database().ref(`users/${memberId}`);
+                }).forEach((memberRef) => {
+                  memberRef.once('value', (snapshot) => {
+                    memberEmails.push(snapshot.val().user_email);
+                    this.setState({ memberEmails: memberEmails });
+
+                    if (++loadedMembers === listOfMember.length) {
+                      this.setState({ memberLoaded: true });
+                    }
+                  });
                 });
-              });
-            }else{
-              console.log('This group has no members.');
-              this.setState({ memberEmails: [], memberLoaded: true });
-            }
-          });
+              }else{
+                console.log('This group has no members.');
+                this.setState({ memberEmails: [], memberLoaded: true });
+              }
+            });
+          }
         });
       } else {
         console.log('Login to see your follower list(followerlist.js)');
@@ -71,6 +76,7 @@ export default class GroupMembers extends React.Component {
           const removeFollow = firebase.database().ref('groups/' + this.state.currentGroupID );
           removeFollow.once('value', (snapshot) => {
             let currentMembers = snapshot.val().group_members;
+
             if (currentMembers === undefined){
               this.setState({ memberEmails: [] });
             } else {
@@ -78,8 +84,25 @@ export default class GroupMembers extends React.Component {
               if (index > -1) {
                 currentMembers.splice(index, 1);
                 removeFollow.child('group_members').set(currentMembers);
+
+                // const removeGroupRef = firebase.database().ref(`users/${userIdbyEmail}`);
+                // removeGroupRef.once('value', (snaps) => {
+                //   let exisitngGroups = snaps.val().user_groups;
+                //   if (exisitngGroups === undefined){
+                //     console.log('This user has no groups');
+                //   }else{
+                //     let checkUserGroup = exisitngGroups.indexOf(this.state.currentGroupID);
+                //     if (checkUserGroup > -1) {
+                //       exisitngGroups.splice(checkUserGroup, 1);
+                //       removeGroupRef.child('user_groups').set(exisitngGroups);
+                //     }
+                //   }
+                // });
+              } else {
+                console.log('This user is not a member of this group. BTW, you should not suppose to see this...');
               }
             }
+
           });
         });
       }

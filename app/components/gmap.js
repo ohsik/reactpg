@@ -30,7 +30,28 @@ export default class GMap extends React.Component {
           refUserPlace.on("value", function(snapshot) {
             var followerList = snapshot.val().followers;
 
-            if (followerList !== undefined){
+
+
+
+
+
+
+
+
+
+            //Load Group markers and add them to followers
+            let myGroups = currentUserGroups(currentUserID);
+            console.log(myGroups);
+            // console.log('Hello World');
+            // console.log(myGroups.favPlace.place_lat);
+
+
+
+
+
+
+            if (followerList !== undefined || myGroups !== undefined){
+
               followerList.push(currentUserID);
 
               var latlngbounds = new google.maps.LatLngBounds();
@@ -133,14 +154,6 @@ export default class GMap extends React.Component {
 
           });
 
-
-          //Load Group markers
-          currentUserGroups(currentUserID);
-
-
-
-
-
           autocomplete.addListener('place_changed', function() {
             infowindow.close();
             marker.setVisible(false);
@@ -200,76 +213,77 @@ export default class GMap extends React.Component {
       console.log(currentUserID);
       let groupsRef = firebase.database().ref('groups');
       groupsRef.once("value", (snapshot) => {
+        if(snapshot.val() !== null ){
+          let totalGroups = Object.keys(snapshot.val());
+          let memberGroups = [];
+          totalGroups.map((groupId) => {
+            let groupRef = firebase.database().ref(`groups/${groupId}`);
+            groupRef.once("value", (snapshot) => {
+              let listOfMembers = snapshot.val().group_members;
+              let nameOfGroups = snapshot.val().group_name;
+              if (listOfMembers.indexOf(currentUserID) < 0) {
+                console.log('Not a member of ' + nameOfGroups);
+                return false;
+              }else{
+                memberGroups.push(nameOfGroups);
+                console.log('Member of ' + nameOfGroups);
 
-        let totalGroups = Object.keys(snapshot.val());
-        let memberGroups = [];
-        totalGroups.map((groupId) => {
-          let groupRef = firebase.database().ref(`groups/${groupId}`);
-          groupRef.once("value", (snapshot) => {
-            let listOfMembers = snapshot.val().group_members;
-            let nameOfGroups = snapshot.val().group_name;
-            if (listOfMembers.indexOf(currentUserID) < 0) {
-              console.log('Not a member of ' + nameOfGroups);
-            }else{
-              memberGroups.push(nameOfGroups);
-              console.log('Member of ' + nameOfGroups);
+                // console.log(memberGroups);
+                // TODO: Array looks okay but Map goes through one more array value
+                memberGroups.map((memberGroupName) => {
+                  groupsRef.orderByChild("group_name").equalTo(memberGroupName).once("value", (snap) => {
+                    let groupID = Object.keys(snap.val()).toString();
 
-              // console.log(memberGroups);
-              // TODO: Array looks okay but Map goes through one more array value
-              memberGroups.map((memberGroupName) => {
-                groupsRef.orderByChild("group_name").equalTo(memberGroupName).once("value", (snap) => {
-                  let groupID = Object.keys(snap.val()).toString();
+                    let userGroupRef = firebase.database().ref(`groups/${groupID}`);
+                    userGroupRef.once("value", (snapshot) => {
+                      let eachGroupMembers = snapshot.val().group_members;
 
-                  let userGroupRef = firebase.database().ref(`groups/${groupID}`);
-                  userGroupRef.once("value", (snapshot) => {
-                    let eachGroupMembers = snapshot.val().group_members;
+                      eachGroupMembers.map((memberID) => {
+                        let placeRef = firebase.database().ref(`places/${memberID}`);
+                        placeRef.once('value', (snap) => {
+                          let memberData = snap.val();
 
-                    eachGroupMembers.map((memberID) => {
-                      let placeRef = firebase.database().ref(`places/${memberID}`);
-                      placeRef.once('value', (snap) => {
-                        let memberData = snap.val();
+                          memberGroups.map((setNameOfGroup) => {
+                            let newGroupObj = {setNameOfGroup, userid: memberID, favPlace: memberData};
+                            let favPlace = newGroupObj.favPlace;
 
-                        memberGroups.map((setNameOfGroup) => {
-                          let newGroupObj = {setNameOfGroup, userid: memberID, favPlace: memberData};
-                          let favPlace = newGroupObj.favPlace;
+                            // console.log(newGroupObj);
+                            return 'newGroupObj';
+                            //return newGroupObj;
+                            //http://jsfiddle.net/svigna/qgHm6/
+                            //http://stackoverflow.com/questions/6229197/how-to-know-if-two-arrays-have-the-same-values
+                            // TODO: Display places by group
+                            // var map = new google.maps.Map(document.getElementById('map'), {
+                            //   center: {lat: 34.0778738, lng: -118.3780315},
+                            //   zoom: 10
+                            // });
+                            //
+                            // var latlng = new google.maps.LatLng(42.745334, 12.738430);
+                            // var marker = new google.maps.Marker({
+                            //     position: latlng,
+                            //     title: 'new marker',
+                            //     draggable: true,
+                            //     map: map
+                            // });
+                            // marker.setMap(map);
 
-                          console.log(newGroupObj);
-                          // TODO: Display places by group
-                          // var map = new google.maps.Map(document.getElementById('map'), {
-                          //   center: {lat: 34.0778738, lng: -118.3780315},
-                          //   zoom: 10
-                          // });
-                          //
-                          // var latlng = new google.maps.LatLng(42.745334, 12.738430);
-                          // var marker = new google.maps.Marker({
-                          //     position: latlng,
-                          //     title: 'new marker',
-                          //     draggable: true,
-                          //     map: map
-                          // });
-                          // marker.setMap(map);
-
-
-
-
-
-
+                          });
 
                         });
-
                       });
+
+
                     });
-
-
                   });
                 });
-              });
 
 
-            }
+              }
+            });
           });
-        });
-
+        }else{
+          console.log('No groups created in this app');
+        }
       });
     }
 

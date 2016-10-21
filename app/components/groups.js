@@ -32,12 +32,25 @@ export default class Groups extends React.Component {
               });
               let groupExists = groupNameArray.indexOf(this.state.group_name);
               if (groupExists < 0) {
-                groupRef.push(groupData);
-                console.log('Group created!');
+                let groupUID = groupRef.push(groupData).key;
+                console.log('Group created! groups.js');
+
                 this.setState({
+                  group_uid: groupUID,
                   group_name: '',
                   errorMsg: 'Group created!'
                 });
+
+                // let userGroupRef = firebase.database().ref(`users/${currentUser}/user_groups`);
+                // userGroupRef.once('value', (snapshot)=> {
+                //   let existingGroups = snapshot.val();
+                //   if (existingGroups !== null){
+                //     existingGroups.push(groupUID);
+                //     userGroupRef.set(existingGroups);
+                //   }else{
+                //     userGroupRef.set([groupUID]);
+                //   }
+                // });
 
               }else{
                 console.log('Group already exists. Please try different name.');

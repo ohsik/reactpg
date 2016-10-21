@@ -13,7 +13,7 @@ import './style.css'
 render((
   <Router history={hashHistory}>
     <Route path="/" component={App}>
-      <IndexRoute cc="login" header="Share your favorite restaurant!" component={Login} />
+      <IndexRoute cc="login" header="Share your favorites!" component={Login} />
       <Route path="/login" cc="login" header="Please Login to continue..." component={Login} />
       <Route path="/follow" cc="follow" header="Manage Follow" component={AddFollower} />
       <Route path="/map" cc="map" header="Favorite Restaurants" component={MapSearch} />

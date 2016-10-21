@@ -11,9 +11,7 @@ export default class Nav extends React.Component {
   // TODO: Warning: setState(...): Can only update a mounted or mounting component. This usually means you called setState() on an unmounted component. This is a no-op. Please check the code for the undefined component.
   componentDidMount() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
-      const favMap = document.getElementById('fav_map');
-      const followLink = document.getElementById('follow_link');
-      const profileLink = document.getElementById('profile_link');
+      const topHeader = document.getElementById('top_header');
 
       if(firebaseUser){
         const myRef = firebase.database().ref("users/" + firebaseUser.uid);
@@ -23,13 +21,9 @@ export default class Nav extends React.Component {
           });
         });
 
-        favMap.classList.remove('hide');
-        followLink.classList.remove('hide');
-        profileLink.classList.remove('hide');
+        topHeader.classList.remove('hide');
       } else {
-        favMap.classList.add('hide');
-        followLink.classList.add('hide');
-        profileLink.classList.add('hide');
+        topHeader.classList.add('hide');
       }
     });
   }
@@ -37,7 +31,7 @@ export default class Nav extends React.Component {
     let groupLink = this.state.user_role === 99 ? <li><Link to="/group" activeClassName="active">Group</Link></li> : '' ;
 
     return (
-      <header>
+      <header id="top_header">
         <nav className="nav">
           <li>
             <IndexLink to="/" activeClassName="active">

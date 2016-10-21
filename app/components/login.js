@@ -41,7 +41,7 @@ export default class Login extends React.Component {
           user_first_name: '',
           user_last_name: '',
           user_profile_pic: '',
-          user_group: [],
+          user_groups: [],
           user_role: '10'
         }
       rootRef.set(userInfo);
@@ -86,7 +86,8 @@ export default class Login extends React.Component {
   render() {
     return (
       <div>
-        <p className="t-c">Share yours & see all your frineds favorites at one place</p>
+        <p className="t-c">Share your favorites & see all your frineds favorites at one place</p>
+        <p className="t-c color-primary">- Now open for favorite restaurants -</p>
         <div className="container container--xs">
           <div id="login_wrap" className="t-c">
             <input placeholder="Email" type="email" id="user_email"></input>

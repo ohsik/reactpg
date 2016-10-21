@@ -43,27 +43,43 @@ export default class Group extends React.Component {
             getUserID.orderByChild("user_email").equalTo(enteredUser).on("value", (snapshot) => {
               if (snapshot.val() !== null) {
                 let enteredUserID = Object.keys(snapshot.val()).toString();
+                const enteredUserRef = firebase.database().ref(`users/${enteredUserID}`);
+
                 if (existingMebers === undefined){
                   addUserRef.child('group_members').set([enteredUserID]);
+                  enteredUserRef.child("user_groups").set([targetGroupID]);
                   this.setState({
-                    errorMsg: 'Member added!',
+                    errorMsg: 'The first member added!',
                     user_email: ''
                   });
                 }else{
+
                   let alreadyAMember = existingMebers.indexOf(enteredUserID);
                   if (alreadyAMember < 0) {
                     existingMebers.push(enteredUserID);
                     addUserRef.child('group_members').set(existingMebers);
+                    // enteredUserRef.once('value', (snapshot)=> {
+                    //   let exitingGroups = snapshot.val().user_groups;
+                    //   if (exitingGroups === undefined){
+                    //     enteredUserRef.child("user_groups").set([targetGroupID]);
+                    //   }else{
+                    //     exitingGroups.push(targetGroupID);
+                    //     enteredUserRef.child("user_groups").set(exitingGroups);
+                    //   }
+                    // });
                     this.setState({
-                      errorMsg: 'Member added!',
+                      errorMsg: 'Member added! (' + enteredUserID + ')',
                       user_email: ''
                     });
+
                   }else{
+                    // TODO: below error message shows up even after saving data successfully(excuting a furation above)
                     console.log('Already a member of this group.');
                     this.setState({
                       errorMsg: 'Already a member of this group.'
                     });
                   }
+
                 }
               }else{
                 console.log(enteredUser + ' is not a member. Wanna send an invite?');
