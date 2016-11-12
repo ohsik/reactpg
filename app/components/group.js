@@ -58,15 +58,6 @@ export default class Group extends React.Component {
                   if (alreadyAMember < 0) {
                     existingMebers.push(enteredUserID);
                     addUserRef.child('group_members').set(existingMebers);
-                    // enteredUserRef.once('value', (snapshot)=> {
-                    //   let exitingGroups = snapshot.val().user_groups;
-                    //   if (exitingGroups === undefined){
-                    //     enteredUserRef.child("user_groups").set([targetGroupID]);
-                    //   }else{
-                    //     exitingGroups.push(targetGroupID);
-                    //     enteredUserRef.child("user_groups").set(exitingGroups);
-                    //   }
-                    // });
                     this.setState({
                       errorMsg: 'Member added! (' + enteredUserID + ')',
                       user_email: ''

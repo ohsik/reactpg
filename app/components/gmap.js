@@ -31,26 +31,13 @@ export default class GMap extends React.Component {
             var followerList = snapshot.val().followers;
 
 
+            // TODO: on hold... Load Group markers and add them to followers
+            // let myGroups = currentUserGroups(currentUserID);
+            // console.log(myGroups);
 
 
-
-
-
-
-
-
-            //Load Group markers and add them to followers
-            let myGroups = currentUserGroups(currentUserID);
-            console.log(myGroups);
-            // console.log('Hello World');
-            // console.log(myGroups.favPlace.place_lat);
-
-
-
-
-
-
-            if (followerList !== undefined || myGroups !== undefined){
+            // if (followerList !== undefined || myGroups !== undefined){
+            if (followerList !== undefined){
 
               followerList.push(currentUserID);
 
@@ -209,6 +196,8 @@ export default class GMap extends React.Component {
       }
     });
 
+
+    // TODO: group feature is on hold
     function currentUserGroups(currentUserID) {
       console.log(currentUserID);
       let groupsRef = firebase.database().ref('groups');
@@ -248,35 +237,15 @@ export default class GMap extends React.Component {
                             let favPlace = newGroupObj.favPlace;
 
                             // console.log(newGroupObj);
-                            return 'newGroupObj';
-                            //return newGroupObj;
-                            //http://jsfiddle.net/svigna/qgHm6/
-                            //http://stackoverflow.com/questions/6229197/how-to-know-if-two-arrays-have-the-same-values
-                            // TODO: Display places by group
-                            // var map = new google.maps.Map(document.getElementById('map'), {
-                            //   center: {lat: 34.0778738, lng: -118.3780315},
-                            //   zoom: 10
-                            // });
-                            //
-                            // var latlng = new google.maps.LatLng(42.745334, 12.738430);
-                            // var marker = new google.maps.Marker({
-                            //     position: latlng,
-                            //     title: 'new marker',
-                            //     draggable: true,
-                            //     map: map
-                            // });
-                            // marker.setMap(map);
 
                           });
 
                         });
                       });
 
-
                     });
                   });
                 });
-
 
               }
             });

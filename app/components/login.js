@@ -33,25 +33,31 @@ export default class Login extends React.Component {
     const password = document.getElementById('user_password').value;
     const auth = firebase.auth();
 
-    const promise = auth.createUserWithEmailAndPassword(email, password).then(function(firebaseUser) {
-      //console.log("User " + firebaseUser.uid + " created successfully!");
-      const rootRef = firebase.database().ref("users/" + firebaseUser.uid);
-      const userInfo = {
-          user_email: email,
-          user_first_name: '',
-          user_last_name: '',
-          user_profile_pic: '',
-          user_groups: [],
-          user_role: '10'
-        }
-      rootRef.set(userInfo);
-    });
-    promise.catch(e => {
+    if (email == '' || password ==''){
       this.setState({
-        errorMsg: e.message
+        errorMsg: 'Enter Email and Password to create account'
+      })
+    }else {
+      const promise = auth.createUserWithEmailAndPassword(email, password).then(function(firebaseUser) {
+        //console.log("User " + firebaseUser.uid + " created successfully!");
+        const rootRef = firebase.database().ref("users/" + firebaseUser.uid);
+        const userInfo = {
+            user_email: email,
+            user_first_name: '',
+            user_last_name: '',
+            user_profile_pic: '',
+            user_groups: [],
+            user_role: '10'
+          }
+        rootRef.set(userInfo);
       });
-      console.log(e.message);
-    });
+      promise.catch(e => {
+        this.setState({
+          errorMsg: e.message
+        });
+        console.log(e.message);
+      });
+    }
   }
   componentDidMount(){
     // TODO: this can't select DOM element
@@ -87,7 +93,7 @@ export default class Login extends React.Component {
     return (
       <div>
         <p className="t-c">Share your favorites & see all your frineds favorites at one place</p>
-        <p className="t-c color-primary">- Now open for favorite restaurants -</p>
+        <p className="t-c color-primary">Now open for favorite restaurants</p>
         <div className="container container--xs">
           <div id="login_wrap" className="t-c">
             <input placeholder="Email" type="email" id="user_email"></input>

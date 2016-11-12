@@ -65,7 +65,7 @@ Extra Layout - 33%
   padding: 10px;
 }
 h1, h2{
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 .content-wrap h1,
 .container > h2{
@@ -125,15 +125,11 @@ h1, h2{
 }
 
 header{
-  width: auto;
-  background: #f44336;
-  color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 0 0 20px 0;
-  -moz-border-radius: 0 0 20px 0;
+  width: 100%;
   display: inline-block;
+}
+nav{
+  width: 100%;
 }
 nav,
 nav li{
@@ -144,12 +140,15 @@ nav li{
   vertical-align: top;
 }
 nav a{
-  color: #fff;
+  color: #444;
   text-decoration: none;
   font-size: 12px;
 }
 .active {
-  color: #fde766;
+  color: #f44336;
+}
+#profile_link{
+  float: right;
 }
 /*Form elements*/
 input{
@@ -157,8 +156,6 @@ input{
   margin-bottom: 5px;
   width: 100%;
   font-size: 16px;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
   border: 1px solid #ddd;
   font-family: 'Roboto Mono', monospace;
 }
@@ -170,8 +167,6 @@ input[type="button"],
   padding: 10px;
   margin: 5px;
   text-decoration: none;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
   cursor: pointer;
   font-family: 'Roboto Mono', monospace;
   display: inline-block;;
@@ -204,9 +199,14 @@ label{
   font-size: 12px;
   color: #f44336;
 }
-.cta{
+.cta,
+.infowindow button{
   background: #f44336;
   color: #fff;
+}
+.infowindow button{
+  font-size: 14px;
+  margin: 5px 0;
 }
 .hide{
   display: none;
@@ -222,11 +222,6 @@ Media query
     -webkit-flex: 0 0 100%;
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
-  }
-  header{
-    background: #f44336;
-    color: #fff;
-    position: static;
   }
 }
 @media (max-width: 480px) {

@@ -12,7 +12,6 @@ export default class Nav extends React.Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       const topHeader = document.getElementById('top_header');
-
       if(firebaseUser){
         const myRef = firebase.database().ref("users/" + firebaseUser.uid);
         myRef.once('value', snapshot => {
@@ -20,7 +19,6 @@ export default class Nav extends React.Component {
             user_role: snapshot.val().user_role
           });
         });
-
         topHeader.classList.remove('hide');
       } else {
         topHeader.classList.add('hide');
@@ -28,14 +26,14 @@ export default class Nav extends React.Component {
     });
   }
   render() {
-    let groupLink = this.state.user_role === 99 ? <li><Link to="/group" activeClassName="active">Group</Link></li> : '' ;
+    let groupLink = this.state.user_role === '99' ? <li><Link to="/group" activeClassName="active">Group</Link></li> : '' ;
 
     return (
       <header id="top_header">
         <nav className="nav">
           <li>
             <IndexLink to="/" activeClassName="active">
-              <img src="https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav-w.svg?alt=media&token=4f9bc7c7-8ada-48c9-96f3-d2ee176468aa" width="20" />
+              <img src="https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.svg?alt=media&token=01e51028-4ce9-4766-9cbd-0e7649272320" width="20" />
             </IndexLink>
           </li>
           <li id="fav_map">
@@ -44,10 +42,10 @@ export default class Nav extends React.Component {
           <li id="follow_link">
             <Link to="/follow" activeClassName="active">Follow</Link>
           </li>
+          {groupLink}
           <li id="profile_link">
             <Link to="/profile" activeClassName="active">Profile</Link>
           </li>
-          {groupLink}
         </nav>
       </header>
     );

@@ -84,20 +84,6 @@ export default class GroupMembers extends React.Component {
               if (index > -1) {
                 currentMembers.splice(index, 1);
                 removeFollow.child('group_members').set(currentMembers);
-
-                // const removeGroupRef = firebase.database().ref(`users/${userIdbyEmail}`);
-                // removeGroupRef.once('value', (snaps) => {
-                //   let exisitngGroups = snaps.val().user_groups;
-                //   if (exisitngGroups === undefined){
-                //     console.log('This user has no groups');
-                //   }else{
-                //     let checkUserGroup = exisitngGroups.indexOf(this.state.currentGroupID);
-                //     if (checkUserGroup > -1) {
-                //       exisitngGroups.splice(checkUserGroup, 1);
-                //       removeGroupRef.child('user_groups').set(exisitngGroups);
-                //     }
-                //   }
-                // });
               } else {
                 console.log('This user is not a member of this group. BTW, you should not suppose to see this...');
               }

@@ -24,6 +24,7 @@ export default class Groups extends React.Component {
               group_status: '0',
               group_members: [currentUser]
             }
+
             groupRef.once("value", (snapshot) => {
               let groupName = snapshot.val();
               let groupNameArray = [];
@@ -34,23 +35,19 @@ export default class Groups extends React.Component {
               if (groupExists < 0) {
                 let groupUID = groupRef.push(groupData).key;
                 console.log('Group created! groups.js');
+                // TODO: Set group UID (groupUID) to creater's account
+                // Get currentuser ID and check if group exist already
+                // If it does not exist, save it under user_groups. If does exist, show error massege
+                // If there's data already under user_groups, add it as array
+                
+                const userRef = firebase.database().ref(`users/${currentUser}`);
+
 
                 this.setState({
                   group_uid: groupUID,
                   group_name: '',
                   errorMsg: 'Group created!'
                 });
-
-                // let userGroupRef = firebase.database().ref(`users/${currentUser}/user_groups`);
-                // userGroupRef.once('value', (snapshot)=> {
-                //   let existingGroups = snapshot.val();
-                //   if (existingGroups !== null){
-                //     existingGroups.push(groupUID);
-                //     userGroupRef.set(existingGroups);
-                //   }else{
-                //     userGroupRef.set([groupUID]);
-                //   }
-                // });
 
               }else{
                 console.log('Group already exists. Please try different name.');
