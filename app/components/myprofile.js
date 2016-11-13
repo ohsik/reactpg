@@ -39,7 +39,22 @@ export default class MyProfile extends React.Component {
   lnameChange(event) {
     this.setState({ myLastName: event.target.value });
   }
-  //TODO: upload pic function implementation
+  userProfilePic(event) {
+    let storageRef = firebase.storage.ref();
+    console.log(storageRef);
+    return false;
+    let fileUpload = document.getElementById("fileUpload");
+    console.log(fileUpload);
+    fileUpload.on('change', function(evt) {
+      console.log('File upload chaged');
+      let firstFile = evt.target.file[0]; // get the first file uploaded
+      console.log(firstFile);
+      let uploadTask = storageRef.put(firstFile);
+      uploadTask.on('state_changed', function progress(snapshot) {
+         console.log(snapshot.totalBytesTransferred); // progress of upload
+      });
+    });
+  }
   updateProfile(){
     const userRef = firebase.database().ref("users/" + this.state.myUid);
     const userInfo = {
@@ -89,8 +104,8 @@ export default class MyProfile extends React.Component {
           <input type="text" className="col" value={this.state.myLastName} onChange={this.lnameChange.bind(this)} placeholder="Last Name" />
         </div>
 
-        {/* <label>Profile Picture</label>
-        <input type="file" name="img" /> */}
+        <label>Profile Picture</label>
+        <input id="fileUpload" type="file" onChange={this.userProfilePic.bind(this)} />
 
         <div className="error-msg">{this.state.errorMsg}</div>
         <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>

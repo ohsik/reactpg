@@ -26,8 +26,6 @@ export default class Nav extends React.Component {
     });
   }
   render() {
-    let groupLink = this.state.user_role === '99' ? <li><Link to="/group" activeClassName="active">Group</Link></li> : '' ;
-
     return (
       <header id="top_header">
         <nav className="nav">
@@ -42,7 +40,6 @@ export default class Nav extends React.Component {
           <li id="follow_link">
             <Link to="/follow" activeClassName="active">Follow</Link>
           </li>
-          {groupLink}
           <li id="profile_link">
             <Link to="/profile" activeClassName="active">Profile</Link>
           </li>

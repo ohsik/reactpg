@@ -31,12 +31,6 @@ export default class GMap extends React.Component {
             var followerList = snapshot.val().followers;
 
 
-            // TODO: on hold... Load Group markers and add them to followers
-            // let myGroups = currentUserGroups(currentUserID);
-            // console.log(myGroups);
-
-
-            // if (followerList !== undefined || myGroups !== undefined){
             if (followerList !== undefined){
 
               followerList.push(currentUserID);
@@ -196,65 +190,6 @@ export default class GMap extends React.Component {
       }
     });
 
-
-    // TODO: group feature is on hold
-    function currentUserGroups(currentUserID) {
-      console.log(currentUserID);
-      let groupsRef = firebase.database().ref('groups');
-      groupsRef.once("value", (snapshot) => {
-        if(snapshot.val() !== null ){
-          let totalGroups = Object.keys(snapshot.val());
-          let memberGroups = [];
-          totalGroups.map((groupId) => {
-            let groupRef = firebase.database().ref(`groups/${groupId}`);
-            groupRef.once("value", (snapshot) => {
-              let listOfMembers = snapshot.val().group_members;
-              let nameOfGroups = snapshot.val().group_name;
-              if (listOfMembers.indexOf(currentUserID) < 0) {
-                console.log('Not a member of ' + nameOfGroups);
-                return false;
-              }else{
-                memberGroups.push(nameOfGroups);
-                console.log('Member of ' + nameOfGroups);
-
-                // console.log(memberGroups);
-                // TODO: Array looks okay but Map goes through one more array value
-                memberGroups.map((memberGroupName) => {
-                  groupsRef.orderByChild("group_name").equalTo(memberGroupName).once("value", (snap) => {
-                    let groupID = Object.keys(snap.val()).toString();
-
-                    let userGroupRef = firebase.database().ref(`groups/${groupID}`);
-                    userGroupRef.once("value", (snapshot) => {
-                      let eachGroupMembers = snapshot.val().group_members;
-
-                      eachGroupMembers.map((memberID) => {
-                        let placeRef = firebase.database().ref(`places/${memberID}`);
-                        placeRef.once('value', (snap) => {
-                          let memberData = snap.val();
-
-                          memberGroups.map((setNameOfGroup) => {
-                            let newGroupObj = {setNameOfGroup, userid: memberID, favPlace: memberData};
-                            let favPlace = newGroupObj.favPlace;
-
-                            // console.log(newGroupObj);
-
-                          });
-
-                        });
-                      });
-
-                    });
-                  });
-                });
-
-              }
-            });
-          });
-        }else{
-          console.log('No groups created in this app');
-        }
-      });
-    }
 
     function saveFavoritePlace (userPlace){
       const currentUser = firebase.auth().currentUser.uid;

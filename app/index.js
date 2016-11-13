@@ -6,8 +6,6 @@ import Login from './components/login'
 import MapSearch from './components/mapsearch'
 import AddFollower from './components/addfollower'
 import MyProfile from './components/myprofile'
-import Groups from './components/groups'
-import Group from './components/group'
 import './style.css'
 
 render((
@@ -18,8 +16,6 @@ render((
       <Route path="/follow" cc="follow" header="Manage Follow" component={AddFollower} />
       <Route path="/map" cc="map" header="Favorite Restaurants" component={MapSearch} />
       <Route path="/profile" cc="profile" header="My Profile" component={MyProfile} />
-      <Route path="/group" cc="group" header="Manage Group" component={Groups} />
-      <Route path="group/:group" cc="manage-group" header="Manage Group" component={Group} />
     </Route>
   </Router>
 ), document.getElementById('app'));
