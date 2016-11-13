@@ -35,7 +35,7 @@ export default class Nav extends React.Component {
             </IndexLink>
           </li>
           <li id="fav_map">
-            <Link to="/map" activeClassName="active">Fav Restaurant</Link>
+            <Link to="/map" activeClassName="active">Fav Restaurants</Link>
           </li>
           <li id="follow_link">
             <Link to="/follow" activeClassName="active">Follow</Link>

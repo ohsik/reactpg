@@ -136,7 +136,7 @@ nav li{
   list-style: none;
   display: inline-block;
   padding: 6px;
-  margin: 0 5px;
+  margin: 0;
   vertical-align: top;
 }
 nav a{
