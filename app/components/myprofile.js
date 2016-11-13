@@ -10,13 +10,25 @@ export default class MyProfile extends React.Component {
       myEmail: '',
       myFirstName: '',
       myLastName: '',
+      user_profile_pic: '',
+      myProfilePicUrl: '',
+      profilePicUpload: '',
       errorMsg: ''
-     };
+    };
   }
   componentDidMount() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(firebaseUser){
         const myRef = firebase.database().ref("users/" + firebaseUser.uid);
+
+        // show profile pic if exist
+        const storageRef = firebase.storage().ref(`user_profile/${firebaseUser.uid}.jpg`);
+        storageRef.getDownloadURL().then(url => {
+          this.setState({
+            myProfilePicUrl: url
+          });
+        });
+
         myRef.once('value', snapshot => {
           this.setState({
             myUid: firebaseUser.uid,
@@ -40,27 +52,32 @@ export default class MyProfile extends React.Component {
     this.setState({ myLastName: event.target.value });
   }
   userProfilePic(event) {
-    let storageRef = firebase.storage.ref();
-    console.log(storageRef);
-    return false;
-    let fileUpload = document.getElementById("fileUpload");
-    console.log(fileUpload);
-    fileUpload.on('change', function(evt) {
-      console.log('File upload chaged');
-      let firstFile = evt.target.file[0]; // get the first file uploaded
-      console.log(firstFile);
-      let uploadTask = storageRef.put(firstFile);
-      uploadTask.on('state_changed', function progress(snapshot) {
-         console.log(snapshot.totalBytesTransferred); // progress of upload
+    let storageRef = firebase.storage().ref(`user_profile/${this.state.myUid}.jpg`);
+    let firstFile = event.target.files[0];
+    let uploadTask = storageRef.put(firstFile);
+    uploadTask.on('state_changed', function progress(snapshot) {
+      //  TODO: progress of upload seems to be working but returns undefied
+      var progress = Math.ceil((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      this.setState({
+        profilePicUpload: progress
       });
-    });
+      // console.log('Upload is ' + progress + '% done');
+    }.bind(this));
   }
   updateProfile(){
+    let storageRef = firebase.storage().ref(`user_profile/${this.state.myUid}.jpg`);
+    storageRef.getDownloadURL().then(url => {
+      this.setState({
+        myProfilePicUrl: url
+      });
+    });
+
     const userRef = firebase.database().ref("users/" + this.state.myUid);
     const userInfo = {
         user_email: this.state.myEmail,
         user_first_name: this.state.myFirstName,
-        user_last_name: this.state.myLastName
+        user_last_name: this.state.myLastName,
+        user_profile_pic: this.state.myProfilePicUrl
       }
     userRef.update(userInfo);
     this.setState({
@@ -93,6 +110,8 @@ export default class MyProfile extends React.Component {
     });
   }
   render() {
+    let showProfilePic = this.state.myProfilePicUrl ?  <div className="profile-pic"><img src={this.state.myProfilePicUrl} /></div> : '';
+    let showUploadProgress = this.state.profilePicUpload ? <p>Uploading {this.state.profilePicUpload}%</p> : '';
     return (
       <div className="container container--xs">
         <label>Email</label>
@@ -105,7 +124,9 @@ export default class MyProfile extends React.Component {
         </div>
 
         <label>Profile Picture</label>
-        <input id="fileUpload" type="file" onChange={this.userProfilePic.bind(this)} />
+        {showProfilePic}
+        {showUploadProgress}
+        <input type="file" onChange={this.userProfilePic.bind(this)} />
 
         <div className="error-msg">{this.state.errorMsg}</div>
         <button onClick={this.updateProfile.bind(this)} className="btn btn--full">Update Profile</button>

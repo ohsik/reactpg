@@ -150,6 +150,18 @@ nav a{
 #profile_link{
   float: right;
 }
+.profile-pic{
+  padding: 10px 0 0 0;
+}
+.profile-pic img{
+  max-width: 120px;
+}
+#markerLayer img {
+  border: 2px solid red !important;
+  width: 85% !important;
+  height: 90% !important;
+  border-radius: 5px;
+}
 /*Form elements*/
 input{
   padding: 10px;

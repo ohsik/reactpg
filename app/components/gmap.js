@@ -42,25 +42,30 @@ export default class GMap extends React.Component {
                 const freindUID = followerList[i];
 
                 function addMyMarker(favPlace) {
-                  if (freindUID == currentUserID){
-                    var image = {
-                      url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
-                      scaledSize : new google.maps.Size(30, 30)
+                  let friendRef = firebase.database().ref(`users/${freindUID}`);
+                  friendRef.on('value', snapshot => {
+                    let hasProfilePic = snapshot.val().user_profile_pic;
+                    if (freindUID == currentUserID){
+                      if (hasProfilePic){
+                        var image = {
+                          url: hasProfilePic,
+                          scaledSize : new google.maps.Size(80, 80)
+                        }
+                      }
+                    } else {
+                      if (hasProfilePic){
+                        var image = {
+                          url: hasProfilePic,
+                          scaledSize : new google.maps.Size(80, 80)
+                        }
+                      }
                     }
-                  }
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
-                    icon: image,
-                    map: map
-                  });
-                }
-
-                // Retrieve new posts as they are added to our database
-                rootRef.on("value", function(snapshot) {
-                  var favPlace = snapshot.val();
-                    if(favPlace !== null){
-                    // Assign Geolocation to Google Maps markers
-                    addMyMarker(favPlace);
+                    // TODO: Add style to image markers
+                    marker = new google.maps.Marker({
+                      position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
+                      icon: image,
+                      map: map
+                    });
 
                     // Add infowindow to markers
                     // favPlace show key
@@ -79,6 +84,15 @@ export default class GMap extends React.Component {
 
                     latlngbounds.extend(marker.getPosition());
                     map.fitBounds(latlngbounds);
+                  });
+                }
+
+                // Retrieve new posts as they are added to our database
+                rootRef.on("value", function(snapshot) {
+                  var favPlace = snapshot.val();
+                    if(favPlace !== null){
+                    // Assign Geolocation to Google Maps markers
+                    addMyMarker(favPlace);
 
                   } else {
                     console.log('Save your favorite place.');
@@ -98,31 +112,42 @@ export default class GMap extends React.Component {
                 // console.log(favPlace);
                 if(favPlace !== null){
 
-                  var image = {
-                    url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
-                    scaledSize : new google.maps.Size(50, 50)
-                  }
-                  marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
-                    map: map,
-                    icon: image
-                  });
-
-                  google.maps.event.addListener(marker, 'click', (function(marker) {
-                    return function() {
-                      //Get email address of people you follow
-                      var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
-                      refFavUserInfo.on('value', function(snapshot) {
-                        const followingEmail = snapshot.val().user_email;
-                        // Info window
-                        infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn cta">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn cta">See it on Google Map</a></div></div>');
-                        infowindow.open(map, marker);
-                      });
+                  let myRef = firebase.database().ref(`users/${user.uid}`);
+                  myRef.on('value', snapshot => {
+                    let hasProfilePic = snapshot.val().user_profile_pic;
+                    if (hasProfilePic){
+                      var image = {
+                        url: hasProfilePic,
+                        scaledSize : new google.maps.Size(80, 80)
+                      }
+                    } else {
+                      var image = {
+                        url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
+                        scaledSize : new google.maps.Size(50, 50)
+                      }
                     }
-                  })(marker));
+                    marker = new google.maps.Marker({
+                      position: new google.maps.LatLng(favPlace.place_lat, favPlace.place_lng),
+                      map: map,
+                      icon: image
+                    });
+                    google.maps.event.addListener(marker, 'click', (function(marker) {
+                      return function() {
+                        //Get email address of people you follow
+                        var refFavUserInfo = firebase.database().ref('users/' + snapshot.key);
+                        refFavUserInfo.on('value', function(snapshot) {
+                          const followingEmail = snapshot.val().user_email;
+                          // Info window
+                          infowindow.setContent('<div class="infowindow"><h2>' + followingEmail + '</h2><h3>' + favPlace.place_name + '</h3><p>' + favPlace.place_address + '</p><p>' + favPlace.place_phone + '</p> <div class="info_btn"><a href="' + favPlace.place_website + '" target="_blank" class="btn cta">Visit Website</a> <a href="' + favPlace.place_url + '" target="_blank" class="btn cta">See it on Google Map</a></div></div>');
+                          infowindow.open(map, marker);
+                        });
+                      }
+                    })(marker));
 
-                  var latLng = marker.getPosition();
-                  map.setCenter(latLng);
+                    var latLng = marker.getPosition();
+                    map.setCenter(latLng);
+
+                  });
 
                 }else{
                   console.log('Please Add your favorite restaurant! You can only have One at a time :)');
