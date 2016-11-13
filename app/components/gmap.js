@@ -122,7 +122,7 @@ export default class GMap extends React.Component {
                       }
                     } else {
                       var image = {
-                        url: 'https://firebasestorage.googleapis.com/v0/b/playground-edcc3.appspot.com/o/sharefav.png?alt=media&token=c52066ae-7245-42b2-8755-cce7e89ce487',
+                        url: 'https://firebasestorage.googleapis.com/v0/b/dafavs-ac8d8.appspot.com/o/sharefav.png?alt=media&token=94bc289c-3707-43e8-81e7-5e9dffd5b2fc',
                         scaledSize : new google.maps.Size(50, 50)
                       }
                     }
