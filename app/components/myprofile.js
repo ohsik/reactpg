@@ -56,12 +56,24 @@ export default class MyProfile extends React.Component {
     let firstFile = event.target.files[0];
     let uploadTask = storageRef.put(firstFile);
     uploadTask.on('state_changed', function progress(snapshot) {
-      //  TODO: progress of upload seems to be working but returns undefied
       var progress = Math.ceil((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
       this.setState({
         profilePicUpload: progress
       });
-      // console.log('Upload is ' + progress + '% done');
+
+      //  TODO: Profile upload pic update profile_url as soon as it's done uploading
+      if(this.state.profilePicUpload === 100){
+        storageRef.getDownloadURL().then(url => {
+          this.setState({
+            myProfilePicUrl: url
+          });
+        });
+        const userRef = firebase.database().ref("users/" + this.state.myUid);
+        userRef.update({user_profile_pic: this.state.myProfilePicUrl});
+        this.setState({
+          errorMsg: 'Profile picture uploaded!'
+        });
+      }
     }.bind(this));
   }
   updateProfile(){
