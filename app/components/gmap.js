@@ -49,14 +49,14 @@ export default class GMap extends React.Component {
                       if (hasProfilePic){
                         var image = {
                           url: hasProfilePic,
-                          scaledSize : new google.maps.Size(80, 80)
+                          scaledSize : new google.maps.Size(60, 60)
                         }
                       }
                     } else {
                       if (hasProfilePic){
                         var image = {
                           url: hasProfilePic,
-                          scaledSize : new google.maps.Size(80, 80)
+                          scaledSize : new google.maps.Size(60, 60)
                         }
                       }
                     }
@@ -118,7 +118,7 @@ export default class GMap extends React.Component {
                     if (hasProfilePic){
                       var image = {
                         url: hasProfilePic,
-                        scaledSize : new google.maps.Size(80, 80)
+                        scaledSize : new google.maps.Size(60, 60)
                       }
                     } else {
                       var image = {

@@ -92,7 +92,7 @@ export default class Login extends React.Component {
   render() {
     return (
       <div>
-        <p className="t-c">Share your favorites & see all your frineds favorites at one place</p>
+        <p className="t-c">Share your favorites & see all your friends favorites at one place</p>
         <p className="t-c color-primary">Now open for favorite restaurants</p>
         <div className="container container--xs">
           <div id="login_wrap" className="t-c">

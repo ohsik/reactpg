@@ -6,4 +6,5 @@ const config = {
   databaseURL: "https://playground-edcc3.firebaseio.com",
   storageBucket: "gs://playground-edcc3.appspot.com/",
 };
+
 firebase.initializeApp(config);
